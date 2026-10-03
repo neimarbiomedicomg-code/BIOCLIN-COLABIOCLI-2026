@@ -1,0 +1,2252 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Catálogo Bioclin Feiras</title>
+<style>
+/* Layout: app de tablet offline — barra superior, cartões grandes de toque, barra de ação fixa no rodapé da linha */
+:root{
+  --bg:#ffffff; --surface:#ffffff; --ink:#18264a; --muted:#5f6471; --line:#dedee2;
+  --accent:#22366a; --accent-ink:#ffffff; --brand2:#8394ab; --hum:#22366a; --vet:#2c7a4c;
+  --hot:#bf3f0e; --warm:#a86d12; --cold:#5f6e80; --soft:#f3f3f5;
+  --f-display:"Roboto Condensed","Arial Narrow","Helvetica Neue",system-ui,sans-serif;
+  --f-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --f-mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace;
+  --r:10px; color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);margin:0;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.15;margin:0}
+.top{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.top-in{max-width:1120px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;line-height:1.1;margin-right:auto;background:none;border:0;padding:0;text-align:left}
+.brand img{height:36px;width:auto;display:block;margin-bottom:2px}
+.top{border-bottom:3px solid var(--accent)!important}
+.brand small{color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:none;padding:8px 14px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:10px 16px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;text-decoration:none;color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:none}
+.count{font-family:var(--f-mono);font-size:12px;background:var(--soft);border-radius:999px;padding:1px 8px}
+main{max-width:1120px;margin:0 auto;padding:20px 16px 150px}
+.crumbs{display:flex;gap:6px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin-bottom:14px}
+.crumbs button{background:none;border:0;padding:0;color:var(--accent);font-weight:600}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0}
+.lead-in{max-width:62ch;color:var(--muted);margin:6px 0 0}
+.grid{display:grid;gap:14px;margin-top:20px}
+.grid.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.grid.three{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.tile{position:relative;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 20px 20px 26px;display:flex;flex-direction:column;gap:8px;min-height:150px;overflow:hidden}
+.tile::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--div,var(--accent))}
+.tile h2{font-size:28px} .tile h3{font-size:22px}
+.tile p{margin:0;color:var(--muted)}
+.tile .meta{margin-top:auto;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.d-hum{--div:var(--hum)} .d-vet{--div:var(--vet)}
+.head-row{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;justify-content:space-between}
+.search{flex:1 1 260px;max-width:380px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:10px 14px;min-height:46px}
+.tbl-wrap{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--soft)}
+tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+.code{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+.pname{font-weight:600}
+.tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:1px dashed var(--muted);color:var(--muted);border-radius:6px;padding:1px 6px}
+.note{margin-top:12px;font-size:14px;color:var(--muted)}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+.dock-in{max-width:1120px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap}
+th.sel,td.sel{width:56px;padding-left:14px;padding-right:4px}
+.add{width:42px;height:42px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--accent);line-height:0;display:inline-flex;align-items:center;justify-content:center}
+.add svg{width:21px;height:21px}
+.add.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.quick{margin-top:18px}
+.quick fieldset{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.cartbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.hintwa{font-weight:400;font-size:13px;color:var(--muted);font-family:var(--f-mono)}
+.fold{border:1px solid var(--line);border-radius:14px;padding:4px 16px;background:var(--surface)}
+.fold summary{font-weight:600;padding:12px 0;cursor:pointer;min-height:46px;display:flex;align-items:center}
+.fold fieldset{border:0;padding:0 0 14px}
+.cartbar button{background:none;border:0;padding:6px 0;color:var(--accent);font-weight:600;font-size:14px;text-decoration:underline;min-height:40px}
+.rm{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:20px;line-height:1}
+.btn.primary .count{background:rgba(255,255,255,.24);color:#fff}
+.dock .btn{flex:1 1 220px;font-size:17px;min-height:56px}
+.overlay{position:fixed;inset:0;z-index:10;background:rgba(6,18,24,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+.sheet{background:var(--surface);border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:14px}
+.sheet h2{font-size:26px}
+.qrbox{background:#fff;border-radius:12px;padding:16px;align-self:center;line-height:0}
+.qrbox canvas{width:320px;height:320px;max-width:72vw;max-height:72vw;image-rendering:pixelated}
+.url{font-family:var(--f-mono);font-size:12px;color:var(--muted);word-break:break-all;background:var(--soft);padding:8px 10px;border-radius:8px;max-height:90px;overflow:auto}
+dl.spec{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
+dl.spec dt{color:var(--muted);font-size:14px} dl.spec dd{margin:0}
+form{display:flex;flex-direction:column;gap:18px;margin-top:18px}
+fieldset{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:18px;margin:0;display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+legend{font-family:var(--f-display);font-weight:700;font-size:18px;padding:0 6px}
+.full{grid-column:1/-1}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:14px;font-weight:600;color:var(--muted);min-width:0}
+label.f input,label.f select,label.f textarea{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 12px;min-height:46px;color:var(--ink);font-weight:400;font-size:16px;width:100%}
+.req{color:var(--hot)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0;margin:0}
+.chip span{display:inline-flex;align-items:center;min-height:42px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font-size:15px;color:var(--ink)}
+.chip input:checked+span{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grp-label{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.consent input{width:24px;height:24px;flex:none;margin-top:1px}
+.err{color:var(--hot);font-size:15px;font-weight:600;margin:0}
+.ok{color:var(--vet);font-size:15px;font-weight:600;margin:0}
+.done{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:12px;max-width:640px}
+.done h2{font-size:28px}
+pre.summary{white-space:pre-wrap;font-family:var(--f-mono);font-size:13px;background:var(--soft);border-radius:8px;padding:12px;margin:0;max-height:300px;overflow:auto}
+.score{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.score::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.s-quente{color:var(--hot)} .s-morno{color:var(--warm)} .s-frio{color:var(--cold)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi b{display:block;font-family:var(--f-display);font-size:34px;font-variant-numeric:tabular-nums}
+.kpi span{font-size:14px;color:var(--muted)}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:28px;color:var(--muted);margin-top:16px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.warn{background:#fff4e5;border:1px solid #f0c890;color:#6b4300;border-radius:10px;padding:12px 14px;font-size:15px}
+.slider{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;margin:0 -16px;-webkit-overflow-scrolling:touch}
+.slider::-webkit-scrollbar{display:none}
+.panel{flex:0 0 100%;scroll-snap-align:start;padding:0 16px;min-width:0}
+.hero{background:none;color:var(--ink);border-radius:0;padding:12px 0 8px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
+.hero::after{display:none}
+.hero .eyebrow{color:var(--muted)}
+.hero h1{font-size:44px;max-width:18ch;position:relative;color:var(--accent)}
+.hero p{margin:0;max-width:60ch;font-size:17px;color:var(--ink);position:relative}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.stat b{display:block;font-family:var(--f-display);font-size:34px;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{color:var(--muted);font-size:14px}
+.about-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,.9fr);gap:28px;align-items:start}
+.col{min-width:0;border-top:2px solid var(--accent);padding-top:14px}
+.hero{padding-top:0!important}
+.div-list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.div-card{position:relative;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 34px 14px 18px;display:flex;flex-direction:column;gap:4px;border-left:5px solid var(--div)}
+.div-card b{font-family:var(--f-display);font-size:19px;color:var(--ink)}
+.div-card span{font-size:14px;color:var(--muted)}
+.div-card small{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--div);font-weight:700;margin-top:4px}
+.div-card i,.lines-list i{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-style:normal;font-size:22px;color:var(--brand2)}
+.lines-list button{position:relative;width:100%;text-align:left;background:none;border:0;padding:10px 26px 10px 0;text-transform:uppercase;letter-spacing:.06em;font-weight:700;font-size:14px;color:var(--accent);min-height:42px}
+.lines-list{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column}
+.lines-list li{border-bottom:1px solid var(--line)}
+.lines-list li:last-child{border-bottom:0}
+@media (max-width:980px){.about-grid{grid-template-columns:1fr 1fr}.about-grid .hero{grid-column:1/-1}}
+@media (max-width:620px){.about-grid{grid-template-columns:1fr}}
+.lines-cloud{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.lines-cloud span{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600;color:var(--accent)}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;flex-wrap:wrap}
+.dots{display:flex;gap:8px}
+.dots button{width:12px;height:12px;border-radius:50%;border:0;padding:0;background:var(--line)}
+.dots button[aria-current="true"]{background:var(--accent);width:28px;border-radius:6px}
+.hint{color:var(--muted);font-size:14px}
+@media (max-width:560px){.hero{padding:8px 0}.hero h1{font-size:32px}
+.tile h2{font-size:24px}.dock .btn{flex:1 1 calc(50% - 5px);font-size:14px;padding:10px 6px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <button class="brand" id="home-btn" type="button"><img src="data:image/jpeg;base64,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" alt="Bioclin"></button>
+  <div class="seg" role="group" aria-label="Idioma">
+    <button type="button" id="lang-pt" data-lang="pt">PT</button>
+    <button type="button" id="lang-es" data-lang="es">ES</button>
+  </div>
+  <button class="btn ghost" type="button" id="leads-btn"><span data-t="leads"></span> <span class="count" id="leads-count">0</span></button>
+  <button class="btn ghost" type="button" id="cfg-btn" data-t="settings"></button>
+</div></header>
+<main id="app"></main>
+<div class="dock" id="dock" hidden><div class="dock-in" id="dock-in"></div></div>
+<div class="overlay" id="overlay" hidden></div>
+
+<script>/* QR Code generator — Kazuhiko Arase port via qrcode-terminal (Apache-2.0 / MIT) */
+(function(){var M={};function R(n){n=n.replace(/^\.\//,"").replace(/\.js$/,"");if(n==="."||n==="")n="index";var m=M[n];if(!m.l){m.l=1;m.f(m.m,m.m.exports,R);}return m.m.exports;}
+M["QR8bitByte"]={l:0,m:{exports:{}},f:function(module,exports,require){var QRMode = require('./QRMode');
+
+function QR8bitByte(data) {
+	this.mode = QRMode.MODE_8BIT_BYTE;
+	this.data = data;
+}
+
+QR8bitByte.prototype = {
+
+	getLength : function() {
+		return this.data.length;
+	},
+	
+	write : function(buffer) {
+		for (var i = 0; i < this.data.length; i++) {
+			// not JIS ...
+			buffer.put(this.data.charCodeAt(i), 8);
+		}
+	}
+};
+
+module.exports = QR8bitByte;
+
+}};
+M["QRBitBuffer"]={l:0,m:{exports:{}},f:function(module,exports,require){function QRBitBuffer() {
+	this.buffer = [];
+	this.length = 0;
+}
+
+QRBitBuffer.prototype = {
+
+	get : function(index) {
+		var bufIndex = Math.floor(index / 8);
+		return ( (this.buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+	},
+	
+	put : function(num, length) {
+		for (var i = 0; i < length; i++) {
+			this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+		}
+	},
+	
+	getLengthInBits : function() {
+		return this.length;
+	},
+	
+	putBit : function(bit) {
+	
+		var bufIndex = Math.floor(this.length / 8);
+		if (this.buffer.length <= bufIndex) {
+			this.buffer.push(0);
+		}
+	
+		if (bit) {
+			this.buffer[bufIndex] |= (0x80 >>> (this.length % 8) );
+		}
+	
+		this.length++;
+	}
+};
+
+module.exports = QRBitBuffer;
+
+}};
+M["QRErrorCorrectLevel"]={l:0,m:{exports:{}},f:function(module,exports,require){module.exports = {
+	L : 1,
+	M : 0,
+	Q : 3,
+	H : 2
+};
+
+
+}};
+M["QRMaskPattern"]={l:0,m:{exports:{}},f:function(module,exports,require){module.exports = {
+	PATTERN000 : 0,
+	PATTERN001 : 1,
+	PATTERN010 : 2,
+	PATTERN011 : 3,
+	PATTERN100 : 4,
+	PATTERN101 : 5,
+	PATTERN110 : 6,
+	PATTERN111 : 7
+};
+
+}};
+M["QRMath"]={l:0,m:{exports:{}},f:function(module,exports,require){var QRMath = {
+
+	glog : function(n) {
+	
+		if (n < 1) {
+			throw new Error("glog(" + n + ")");
+		}
+		
+		return QRMath.LOG_TABLE[n];
+	},
+	
+	gexp : function(n) {
+	
+		while (n < 0) {
+			n += 255;
+		}
+	
+		while (n >= 256) {
+			n -= 255;
+		}
+	
+		return QRMath.EXP_TABLE[n];
+	},
+	
+	EXP_TABLE : new Array(256),
+	
+	LOG_TABLE : new Array(256)
+
+};
+	
+for (var i = 0; i < 8; i++) {
+	QRMath.EXP_TABLE[i] = 1 << i;
+}
+for (var i = 8; i < 256; i++) {
+	QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4]
+		^ QRMath.EXP_TABLE[i - 5]
+		^ QRMath.EXP_TABLE[i - 6]
+		^ QRMath.EXP_TABLE[i - 8];
+}
+for (var i = 0; i < 255; i++) {
+	QRMath.LOG_TABLE[QRMath.EXP_TABLE[i] ] = i;
+}
+
+module.exports = QRMath;
+
+}};
+M["QRMode"]={l:0,m:{exports:{}},f:function(module,exports,require){module.exports = {
+    MODE_NUMBER :       1 << 0,
+    MODE_ALPHA_NUM :    1 << 1,
+    MODE_8BIT_BYTE :    1 << 2,
+    MODE_KANJI :        1 << 3
+};
+
+}};
+M["QRPolynomial"]={l:0,m:{exports:{}},f:function(module,exports,require){var QRMath = require('./QRMath');
+
+function QRPolynomial(num, shift) {
+	if (num.length === undefined) {
+		throw new Error(num.length + "/" + shift);
+	}
+
+	var offset = 0;
+
+	while (offset < num.length && num[offset] === 0) {
+		offset++;
+	}
+
+	this.num = new Array(num.length - offset + shift);
+	for (var i = 0; i < num.length - offset; i++) {
+		this.num[i] = num[i + offset];
+	}
+}
+
+QRPolynomial.prototype = {
+
+	get : function(index) {
+		return this.num[index];
+	},
+	
+	getLength : function() {
+		return this.num.length;
+	},
+	
+	multiply : function(e) {
+	
+		var num = new Array(this.getLength() + e.getLength() - 1);
+	
+		for (var i = 0; i < this.getLength(); i++) {
+			for (var j = 0; j < e.getLength(); j++) {
+				num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i) ) + QRMath.glog(e.get(j) ) );
+			}
+		}
+	
+		return new QRPolynomial(num, 0);
+	},
+	
+	mod : function(e) {
+	
+		if (this.getLength() - e.getLength() < 0) {
+			return this;
+		}
+	
+		var ratio = QRMath.glog(this.get(0) ) - QRMath.glog(e.get(0) );
+	
+		var num = new Array(this.getLength() );
+		
+		for (var i = 0; i < this.getLength(); i++) {
+			num[i] = this.get(i);
+		}
+		
+		for (var x = 0; x < e.getLength(); x++) {
+			num[x] ^= QRMath.gexp(QRMath.glog(e.get(x) ) + ratio);
+		}
+	
+		// recursive call
+		return new QRPolynomial(num, 0).mod(e);
+	}
+};
+
+module.exports = QRPolynomial;
+
+}};
+M["QRRSBlock"]={l:0,m:{exports:{}},f:function(module,exports,require){var QRErrorCorrectLevel = require('./QRErrorCorrectLevel');
+
+function QRRSBlock(totalCount, dataCount) {
+	this.totalCount = totalCount;
+	this.dataCount  = dataCount;
+}
+
+QRRSBlock.RS_BLOCK_TABLE = [
+
+	// L
+	// M
+	// Q
+	// H
+
+	// 1
+	[1, 26, 19],
+	[1, 26, 16],
+	[1, 26, 13],
+	[1, 26, 9],
+	
+	// 2
+	[1, 44, 34],
+	[1, 44, 28],
+	[1, 44, 22],
+	[1, 44, 16],
+
+	// 3
+	[1, 70, 55],
+	[1, 70, 44],
+	[2, 35, 17],
+	[2, 35, 13],
+
+	// 4		
+	[1, 100, 80],
+	[2, 50, 32],
+	[2, 50, 24],
+	[4, 25, 9],
+	
+	// 5
+	[1, 134, 108],
+	[2, 67, 43],
+	[2, 33, 15, 2, 34, 16],
+	[2, 33, 11, 2, 34, 12],
+	
+	// 6
+	[2, 86, 68],
+	[4, 43, 27],
+	[4, 43, 19],
+	[4, 43, 15],
+	
+	// 7		
+	[2, 98, 78],
+	[4, 49, 31],
+	[2, 32, 14, 4, 33, 15],
+	[4, 39, 13, 1, 40, 14],
+	
+	// 8
+	[2, 121, 97],
+	[2, 60, 38, 2, 61, 39],
+	[4, 40, 18, 2, 41, 19],
+	[4, 40, 14, 2, 41, 15],
+	
+	// 9
+	[2, 146, 116],
+	[3, 58, 36, 2, 59, 37],
+	[4, 36, 16, 4, 37, 17],
+	[4, 36, 12, 4, 37, 13],
+	
+	// 10		
+	[2, 86, 68, 2, 87, 69],
+	[4, 69, 43, 1, 70, 44],
+	[6, 43, 19, 2, 44, 20],
+	[6, 43, 15, 2, 44, 16],
+
+	// 11
+	[4, 101, 81],
+	[1, 80, 50, 4, 81, 51],
+	[4, 50, 22, 4, 51, 23],
+	[3, 36, 12, 8, 37, 13],
+
+	// 12
+	[2, 116, 92, 2, 117, 93],
+	[6, 58, 36, 2, 59, 37],
+	[4, 46, 20, 6, 47, 21],
+	[7, 42, 14, 4, 43, 15],
+
+	// 13
+	[4, 133, 107],
+	[8, 59, 37, 1, 60, 38],
+	[8, 44, 20, 4, 45, 21],
+	[12, 33, 11, 4, 34, 12],
+
+	// 14
+	[3, 145, 115, 1, 146, 116],
+	[4, 64, 40, 5, 65, 41],
+	[11, 36, 16, 5, 37, 17],
+	[11, 36, 12, 5, 37, 13],
+
+	// 15
+	[5, 109, 87, 1, 110, 88],
+	[5, 65, 41, 5, 66, 42],
+	[5, 54, 24, 7, 55, 25],
+	[11, 36, 12],
+
+	// 16
+	[5, 122, 98, 1, 123, 99],
+	[7, 73, 45, 3, 74, 46],
+	[15, 43, 19, 2, 44, 20],
+	[3, 45, 15, 13, 46, 16],
+
+	// 17
+	[1, 135, 107, 5, 136, 108],
+	[10, 74, 46, 1, 75, 47],
+	[1, 50, 22, 15, 51, 23],
+	[2, 42, 14, 17, 43, 15],
+
+	// 18
+	[5, 150, 120, 1, 151, 121],
+	[9, 69, 43, 4, 70, 44],
+	[17, 50, 22, 1, 51, 23],
+	[2, 42, 14, 19, 43, 15],
+
+	// 19
+	[3, 141, 113, 4, 142, 114],
+	[3, 70, 44, 11, 71, 45],
+	[17, 47, 21, 4, 48, 22],
+	[9, 39, 13, 16, 40, 14],
+
+	// 20
+	[3, 135, 107, 5, 136, 108],
+	[3, 67, 41, 13, 68, 42],
+	[15, 54, 24, 5, 55, 25],
+	[15, 43, 15, 10, 44, 16],
+
+	// 21
+	[4, 144, 116, 4, 145, 117],
+	[17, 68, 42],
+	[17, 50, 22, 6, 51, 23],
+	[19, 46, 16, 6, 47, 17],
+
+	// 22
+	[2, 139, 111, 7, 140, 112],
+	[17, 74, 46],
+	[7, 54, 24, 16, 55, 25],
+	[34, 37, 13],
+
+	// 23
+	[4, 151, 121, 5, 152, 122],
+	[4, 75, 47, 14, 76, 48],
+	[11, 54, 24, 14, 55, 25],
+	[16, 45, 15, 14, 46, 16],
+
+	// 24
+	[6, 147, 117, 4, 148, 118],
+	[6, 73, 45, 14, 74, 46],
+	[11, 54, 24, 16, 55, 25],
+	[30, 46, 16, 2, 47, 17],
+
+	// 25
+	[8, 132, 106, 4, 133, 107],
+	[8, 75, 47, 13, 76, 48],
+	[7, 54, 24, 22, 55, 25],
+	[22, 45, 15, 13, 46, 16],
+
+	// 26
+	[10, 142, 114, 2, 143, 115],
+	[19, 74, 46, 4, 75, 47],
+	[28, 50, 22, 6, 51, 23],
+	[33, 46, 16, 4, 47, 17],
+
+	// 27
+	[8, 152, 122, 4, 153, 123],
+	[22, 73, 45, 3, 74, 46],
+	[8, 53, 23, 26, 54, 24],
+	[12, 45, 15, 28, 46, 16],
+
+	// 28
+	[3, 147, 117, 10, 148, 118],
+	[3, 73, 45, 23, 74, 46],
+	[4, 54, 24, 31, 55, 25],
+	[11, 45, 15, 31, 46, 16],
+
+	// 29
+	[7, 146, 116, 7, 147, 117],
+	[21, 73, 45, 7, 74, 46],
+	[1, 53, 23, 37, 54, 24],
+	[19, 45, 15, 26, 46, 16],
+
+	// 30
+	[5, 145, 115, 10, 146, 116],
+	[19, 75, 47, 10, 76, 48],
+	[15, 54, 24, 25, 55, 25],
+	[23, 45, 15, 25, 46, 16],
+
+	// 31
+	[13, 145, 115, 3, 146, 116],
+	[2, 74, 46, 29, 75, 47],
+	[42, 54, 24, 1, 55, 25],
+	[23, 45, 15, 28, 46, 16],
+
+	// 32
+	[17, 145, 115],
+	[10, 74, 46, 23, 75, 47],
+	[10, 54, 24, 35, 55, 25],
+	[19, 45, 15, 35, 46, 16],
+
+	// 33
+	[17, 145, 115, 1, 146, 116],
+	[14, 74, 46, 21, 75, 47],
+	[29, 54, 24, 19, 55, 25],
+	[11, 45, 15, 46, 46, 16],
+
+	// 34
+	[13, 145, 115, 6, 146, 116],
+	[14, 74, 46, 23, 75, 47],
+	[44, 54, 24, 7, 55, 25],
+	[59, 46, 16, 1, 47, 17],
+
+	// 35
+	[12, 151, 121, 7, 152, 122],
+	[12, 75, 47, 26, 76, 48],
+	[39, 54, 24, 14, 55, 25],
+	[22, 45, 15, 41, 46, 16],
+
+	// 36
+	[6, 151, 121, 14, 152, 122],
+	[6, 75, 47, 34, 76, 48],
+	[46, 54, 24, 10, 55, 25],
+	[2, 45, 15, 64, 46, 16],
+
+	// 37
+	[17, 152, 122, 4, 153, 123],
+	[29, 74, 46, 14, 75, 47],
+	[49, 54, 24, 10, 55, 25],
+	[24, 45, 15, 46, 46, 16],
+
+	// 38
+	[4, 152, 122, 18, 153, 123],
+	[13, 74, 46, 32, 75, 47],
+	[48, 54, 24, 14, 55, 25],
+	[42, 45, 15, 32, 46, 16],
+
+	// 39
+	[20, 147, 117, 4, 148, 118],
+	[40, 75, 47, 7, 76, 48],
+	[43, 54, 24, 22, 55, 25],
+	[10, 45, 15, 67, 46, 16],
+
+	// 40
+	[19, 148, 118, 6, 149, 119],
+	[18, 75, 47, 31, 76, 48],
+	[34, 54, 24, 34, 55, 25],
+	[20, 45, 15, 61, 46, 16]
+];
+
+QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
+	
+	var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+	
+	if (rsBlock === undefined) {
+		throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
+	}
+
+	var length = rsBlock.length / 3;
+	
+	var list = [];
+	
+	for (var i = 0; i < length; i++) {
+
+		var count = rsBlock[i * 3 + 0];
+		var totalCount = rsBlock[i * 3 + 1];
+		var dataCount  = rsBlock[i * 3 + 2];
+
+		for (var j = 0; j < count; j++) {
+			list.push(new QRRSBlock(totalCount, dataCount) );	
+		}
+	}
+	
+	return list;
+};
+
+QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
+
+	switch(errorCorrectLevel) {
+	case QRErrorCorrectLevel.L :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+	case QRErrorCorrectLevel.M :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+	case QRErrorCorrectLevel.Q :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+	case QRErrorCorrectLevel.H :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+	default :
+		return undefined;
+	}
+};
+
+module.exports = QRRSBlock;
+
+}};
+M["QRUtil"]={l:0,m:{exports:{}},f:function(module,exports,require){var QRMode = require('./QRMode');
+var QRPolynomial = require('./QRPolynomial');
+var QRMath = require('./QRMath');
+var QRMaskPattern = require('./QRMaskPattern');
+
+var QRUtil = {
+
+    PATTERN_POSITION_TABLE : [
+        [],
+        [6, 18],
+        [6, 22],
+        [6, 26],
+        [6, 30],
+        [6, 34],
+        [6, 22, 38],
+        [6, 24, 42],
+        [6, 26, 46],
+        [6, 28, 50],
+        [6, 30, 54],        
+        [6, 32, 58],
+        [6, 34, 62],
+        [6, 26, 46, 66],
+        [6, 26, 48, 70],
+        [6, 26, 50, 74],
+        [6, 30, 54, 78],
+        [6, 30, 56, 82],
+        [6, 30, 58, 86],
+        [6, 34, 62, 90],
+        [6, 28, 50, 72, 94],
+        [6, 26, 50, 74, 98],
+        [6, 30, 54, 78, 102],
+        [6, 28, 54, 80, 106],
+        [6, 32, 58, 84, 110],
+        [6, 30, 58, 86, 114],
+        [6, 34, 62, 90, 118],
+        [6, 26, 50, 74, 98, 122],
+        [6, 30, 54, 78, 102, 126],
+        [6, 26, 52, 78, 104, 130],
+        [6, 30, 56, 82, 108, 134],
+        [6, 34, 60, 86, 112, 138],
+        [6, 30, 58, 86, 114, 142],
+        [6, 34, 62, 90, 118, 146],
+        [6, 30, 54, 78, 102, 126, 150],
+        [6, 24, 50, 76, 102, 128, 154],
+        [6, 28, 54, 80, 106, 132, 158],
+        [6, 32, 58, 84, 110, 136, 162],
+        [6, 26, 54, 82, 110, 138, 166],
+        [6, 30, 58, 86, 114, 142, 170]
+    ],
+
+    G15 : (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+    G18 : (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+    G15_MASK : (1 << 14) | (1 << 12) | (1 << 10)    | (1 << 4) | (1 << 1),
+
+    getBCHTypeInfo : function(data) {
+        var d = data << 10;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+            d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) ) );    
+        }
+        return ( (data << 10) | d) ^ QRUtil.G15_MASK;
+    },
+
+    getBCHTypeNumber : function(data) {
+        var d = data << 12;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+            d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) ) );    
+        }
+        return (data << 12) | d;
+    },
+
+    getBCHDigit : function(data) {
+
+        var digit = 0;
+
+        while (data !== 0) {
+            digit++;
+            data >>>= 1;
+        }
+
+        return digit;
+    },
+
+    getPatternPosition : function(typeNumber) {
+        return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+    },
+
+    getMask : function(maskPattern, i, j) {
+        
+        switch (maskPattern) {
+            
+        case QRMaskPattern.PATTERN000 : return (i + j) % 2 === 0;
+        case QRMaskPattern.PATTERN001 : return i % 2 === 0;
+        case QRMaskPattern.PATTERN010 : return j % 3 === 0;
+        case QRMaskPattern.PATTERN011 : return (i + j) % 3 === 0;
+        case QRMaskPattern.PATTERN100 : return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 === 0;
+        case QRMaskPattern.PATTERN101 : return (i * j) % 2 + (i * j) % 3 === 0;
+        case QRMaskPattern.PATTERN110 : return ( (i * j) % 2 + (i * j) % 3) % 2 === 0;
+        case QRMaskPattern.PATTERN111 : return ( (i * j) % 3 + (i + j) % 2) % 2 === 0;
+
+        default :
+            throw new Error("bad maskPattern:" + maskPattern);
+        }
+    },
+
+    getErrorCorrectPolynomial : function(errorCorrectLength) {
+
+        var a = new QRPolynomial([1], 0);
+
+        for (var i = 0; i < errorCorrectLength; i++) {
+            a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0) );
+        }
+
+        return a;
+    },
+
+    getLengthInBits : function(mode, type) {
+
+        if (1 <= type && type < 10) {
+
+            // 1 - 9
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 10;
+            case QRMode.MODE_ALPHA_NUM  : return 9;
+            case QRMode.MODE_8BIT_BYTE  : return 8;
+            case QRMode.MODE_KANJI      : return 8;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 27) {
+
+            // 10 - 26
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 12;
+            case QRMode.MODE_ALPHA_NUM  : return 11;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 10;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 41) {
+
+            // 27 - 40
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 14;
+            case QRMode.MODE_ALPHA_NUM  : return 13;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 12;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else {
+            throw new Error("type:" + type);
+        }
+    },
+
+    getLostPoint : function(qrCode) {
+        
+        var moduleCount = qrCode.getModuleCount();
+        var lostPoint = 0;
+        var row = 0; 
+        var col = 0;
+
+        
+        // LEVEL1
+        
+        for (row = 0; row < moduleCount; row++) {
+
+            for (col = 0; col < moduleCount; col++) {
+
+                var sameCount = 0;
+                var dark = qrCode.isDark(row, col);
+
+                for (var r = -1; r <= 1; r++) {
+
+                    if (row + r < 0 || moduleCount <= row + r) {
+                        continue;
+                    }
+
+                    for (var c = -1; c <= 1; c++) {
+
+                        if (col + c < 0 || moduleCount <= col + c) {
+                            continue;
+                        }
+
+                        if (r === 0 && c === 0) {
+                            continue;
+                        }
+
+                        if (dark === qrCode.isDark(row + r, col + c) ) {
+                            sameCount++;
+                        }
+                    }
+                }
+
+                if (sameCount > 5) {
+                    lostPoint += (3 + sameCount - 5);
+                }
+            }
+        }
+
+        // LEVEL2
+
+        for (row = 0; row < moduleCount - 1; row++) {
+            for (col = 0; col < moduleCount - 1; col++) {
+                var count = 0;
+                if (qrCode.isDark(row,     col    ) ) count++;
+                if (qrCode.isDark(row + 1, col    ) ) count++;
+                if (qrCode.isDark(row,     col + 1) ) count++;
+                if (qrCode.isDark(row + 1, col + 1) ) count++;
+                if (count === 0 || count === 4) {
+                    lostPoint += 3;
+                }
+            }
+        }
+
+        // LEVEL3
+
+        for (row = 0; row < moduleCount; row++) {
+            for (col = 0; col < moduleCount - 6; col++) {
+                if (qrCode.isDark(row, col) && 
+                        !qrCode.isDark(row, col + 1) && 
+                         qrCode.isDark(row, col + 2) && 
+                         qrCode.isDark(row, col + 3) && 
+                         qrCode.isDark(row, col + 4) && 
+                        !qrCode.isDark(row, col + 5) && 
+                         qrCode.isDark(row, col + 6) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount - 6; row++) {
+                if (qrCode.isDark(row, col) &&
+                        !qrCode.isDark(row + 1, col) &&
+                         qrCode.isDark(row + 2, col) &&
+                         qrCode.isDark(row + 3, col) &&
+                         qrCode.isDark(row + 4, col) &&
+                        !qrCode.isDark(row + 5, col) &&
+                         qrCode.isDark(row + 6, col) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        // LEVEL4
+        
+        var darkCount = 0;
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount; row++) {
+                if (qrCode.isDark(row, col) ) {
+                    darkCount++;
+                }
+            }
+        }
+        
+        var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+        lostPoint += ratio * 10;
+
+        return lostPoint;       
+    }
+
+};
+
+module.exports = QRUtil;
+
+}};
+M["index"]={l:0,m:{exports:{}},f:function(module,exports,require){//---------------------------------------------------------------------
+// QRCode for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//   http://www.opensource.org/licenses/mit-license.php
+//
+// The word "QR Code" is registered trademark of 
+// DENSO WAVE INCORPORATED
+//   http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+// Modified to work in node for this project (and some refactoring)
+//---------------------------------------------------------------------
+
+var QR8bitByte = require('./QR8bitByte');
+var QRUtil = require('./QRUtil');
+var QRPolynomial = require('./QRPolynomial');
+var QRRSBlock = require('./QRRSBlock');
+var QRBitBuffer = require('./QRBitBuffer');
+
+function QRCode(typeNumber, errorCorrectLevel) {
+	this.typeNumber = typeNumber;
+	this.errorCorrectLevel = errorCorrectLevel;
+	this.modules = null;
+	this.moduleCount = 0;
+	this.dataCache = null;
+	this.dataList = [];
+}
+
+QRCode.prototype = {
+	
+	addData : function(data) {
+		var newData = new QR8bitByte(data);
+		this.dataList.push(newData);
+		this.dataCache = null;
+	},
+	
+	isDark : function(row, col) {
+		if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
+			throw new Error(row + "," + col);
+		}
+		return this.modules[row][col];
+	},
+
+	getModuleCount : function() {
+		return this.moduleCount;
+	},
+	
+	make : function() {
+		// Calculate automatically typeNumber if provided is < 1
+		if (this.typeNumber < 1 ){
+			var typeNumber = 1;
+			for (typeNumber = 1; typeNumber < 40; typeNumber++) {
+				var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel);
+
+				var buffer = new QRBitBuffer();
+				var totalDataCount = 0;
+				for (var i = 0; i < rsBlocks.length; i++) {
+					totalDataCount += rsBlocks[i].dataCount;
+				}
+
+				for (var x = 0; x < this.dataList.length; x++) {
+					var data = this.dataList[x];
+					buffer.put(data.mode, 4);
+					buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+					data.write(buffer);
+				}
+				if (buffer.getLengthInBits() <= totalDataCount * 8)
+					break;
+			}
+			this.typeNumber = typeNumber;
+		}
+		this.makeImpl(false, this.getBestMaskPattern() );
+	},
+	
+	makeImpl : function(test, maskPattern) {
+		
+		this.moduleCount = this.typeNumber * 4 + 17;
+		this.modules = new Array(this.moduleCount);
+		
+		for (var row = 0; row < this.moduleCount; row++) {
+			
+			this.modules[row] = new Array(this.moduleCount);
+			
+			for (var col = 0; col < this.moduleCount; col++) {
+				this.modules[row][col] = null;//(col + row) % 3;
+			}
+		}
+	
+		this.setupPositionProbePattern(0, 0);
+		this.setupPositionProbePattern(this.moduleCount - 7, 0);
+		this.setupPositionProbePattern(0, this.moduleCount - 7);
+		this.setupPositionAdjustPattern();
+		this.setupTimingPattern();
+		this.setupTypeInfo(test, maskPattern);
+		
+		if (this.typeNumber >= 7) {
+			this.setupTypeNumber(test);
+		}
+	
+		if (this.dataCache === null) {
+			this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+		}
+	
+		this.mapData(this.dataCache, maskPattern);
+	},
+
+	setupPositionProbePattern : function(row, col)  {
+		
+		for (var r = -1; r <= 7; r++) {
+			
+			if (row + r <= -1 || this.moduleCount <= row + r) continue;
+			
+			for (var c = -1; c <= 7; c++) {
+				
+				if (col + c <= -1 || this.moduleCount <= col + c) continue;
+				
+				if ( (0 <= r && r <= 6 && (c === 0 || c === 6) ) || 
+                     (0 <= c && c <= 6 && (r === 0 || r === 6) ) || 
+                     (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+					this.modules[row + r][col + c] = true;
+				} else {
+					this.modules[row + r][col + c] = false;
+				}
+			}		
+		}		
+	},
+	
+	getBestMaskPattern : function() {
+	
+		var minLostPoint = 0;
+		var pattern = 0;
+	
+		for (var i = 0; i < 8; i++) {
+			
+			this.makeImpl(true, i);
+	
+			var lostPoint = QRUtil.getLostPoint(this);
+	
+			if (i === 0 || minLostPoint >  lostPoint) {
+				minLostPoint = lostPoint;
+				pattern = i;
+			}
+		}
+	
+		return pattern;
+	},
+	
+	createMovieClip : function(target_mc, instance_name, depth) {
+	
+		var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+		var cs = 1;
+	
+		this.make();
+
+		for (var row = 0; row < this.modules.length; row++) {
+			
+			var y = row * cs;
+			
+			for (var col = 0; col < this.modules[row].length; col++) {
+	
+				var x = col * cs;
+				var dark = this.modules[row][col];
+			
+				if (dark) {
+					qr_mc.beginFill(0, 100);
+					qr_mc.moveTo(x, y);
+					qr_mc.lineTo(x + cs, y);
+					qr_mc.lineTo(x + cs, y + cs);
+					qr_mc.lineTo(x, y + cs);
+					qr_mc.endFill();
+				}
+			}
+		}
+		
+		return qr_mc;
+	},
+
+	setupTimingPattern : function() {
+		
+		for (var r = 8; r < this.moduleCount - 8; r++) {
+			if (this.modules[r][6] !== null) {
+				continue;
+			}
+			this.modules[r][6] = (r % 2 === 0);
+		}
+	
+		for (var c = 8; c < this.moduleCount - 8; c++) {
+			if (this.modules[6][c] !== null) {
+				continue;
+			}
+			this.modules[6][c] = (c % 2 === 0);
+		}
+	},
+	
+	setupPositionAdjustPattern : function() {
+	
+		var pos = QRUtil.getPatternPosition(this.typeNumber);
+		
+		for (var i = 0; i < pos.length; i++) {
+		
+			for (var j = 0; j < pos.length; j++) {
+			
+				var row = pos[i];
+				var col = pos[j];
+				
+				if (this.modules[row][col] !== null) {
+					continue;
+				}
+				
+				for (var r = -2; r <= 2; r++) {
+				
+					for (var c = -2; c <= 2; c++) {
+					
+						if (Math.abs(r) === 2 || 
+                            Math.abs(c) === 2 ||
+                            (r === 0 && c === 0) ) {
+							this.modules[row + r][col + c] = true;
+						} else {
+							this.modules[row + r][col + c] = false;
+						}
+					}
+				}
+			}
+		}
+	},
+	
+	setupTypeNumber : function(test) {
+	
+		var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+        var mod;
+	
+		for (var i = 0; i < 18; i++) {
+			mod = (!test && ( (bits >> i) & 1) === 1);
+			this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+		}
+	
+		for (var x = 0; x < 18; x++) {
+			mod = (!test && ( (bits >> x) & 1) === 1);
+			this.modules[x % 3 + this.moduleCount - 8 - 3][Math.floor(x / 3)] = mod;
+		}
+	},
+	
+	setupTypeInfo : function(test, maskPattern) {
+	
+		var data = (this.errorCorrectLevel << 3) | maskPattern;
+		var bits = QRUtil.getBCHTypeInfo(data);
+        var mod;
+	
+		// vertical		
+		for (var v = 0; v < 15; v++) {
+	
+			mod = (!test && ( (bits >> v) & 1) === 1);
+	
+			if (v < 6) {
+				this.modules[v][8] = mod;
+			} else if (v < 8) {
+				this.modules[v + 1][8] = mod;
+			} else {
+				this.modules[this.moduleCount - 15 + v][8] = mod;
+			}
+		}
+	
+		// horizontal
+		for (var h = 0; h < 15; h++) {
+	
+			mod = (!test && ( (bits >> h) & 1) === 1);
+			
+			if (h < 8) {
+				this.modules[8][this.moduleCount - h - 1] = mod;
+			} else if (h < 9) {
+				this.modules[8][15 - h - 1 + 1] = mod;
+			} else {
+				this.modules[8][15 - h - 1] = mod;
+			}
+		}
+	
+		// fixed module
+		this.modules[this.moduleCount - 8][8] = (!test);
+	
+	},
+	
+	mapData : function(data, maskPattern) {
+		
+		var inc = -1;
+		var row = this.moduleCount - 1;
+		var bitIndex = 7;
+		var byteIndex = 0;
+		
+		for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+	
+			if (col === 6) col--;
+	
+			while (true) {
+	
+				for (var c = 0; c < 2; c++) {
+					
+					if (this.modules[row][col - c] === null) {
+						
+						var dark = false;
+	
+						if (byteIndex < data.length) {
+							dark = ( ( (data[byteIndex] >>> bitIndex) & 1) === 1);
+						}
+	
+						var mask = QRUtil.getMask(maskPattern, row, col - c);
+	
+						if (mask) {
+							dark = !dark;
+						}
+						
+						this.modules[row][col - c] = dark;
+						bitIndex--;
+	
+						if (bitIndex === -1) {
+							byteIndex++;
+							bitIndex = 7;
+						}
+					}
+				}
+								
+				row += inc;
+	
+				if (row < 0 || this.moduleCount <= row) {
+					row -= inc;
+					inc = -inc;
+					break;
+				}
+			}
+		}
+		
+	}
+
+};
+
+QRCode.PAD0 = 0xEC;
+QRCode.PAD1 = 0x11;
+
+QRCode.createData = function(typeNumber, errorCorrectLevel, dataList) {
+	
+	var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+	
+	var buffer = new QRBitBuffer();
+	
+	for (var i = 0; i < dataList.length; i++) {
+		var data = dataList[i];
+		buffer.put(data.mode, 4);
+		buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+		data.write(buffer);
+	}
+
+	// calc num max data.
+	var totalDataCount = 0;
+	for (var x = 0; x < rsBlocks.length; x++) {
+		totalDataCount += rsBlocks[x].dataCount;
+	}
+
+	if (buffer.getLengthInBits() > totalDataCount * 8) {
+		throw new Error("code length overflow. (" + 
+            buffer.getLengthInBits() + 
+            ">" +  
+            totalDataCount * 8 + 
+            ")");
+	}
+
+	// end code
+	if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+		buffer.put(0, 4);
+	}
+
+	// padding
+	while (buffer.getLengthInBits() % 8 !== 0) {
+		buffer.putBit(false);
+	}
+
+	// padding
+	while (true) {
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD0, 8);
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD1, 8);
+	}
+
+	return QRCode.createBytes(buffer, rsBlocks);
+};
+
+QRCode.createBytes = function(buffer, rsBlocks) {
+
+	var offset = 0;
+	
+	var maxDcCount = 0;
+	var maxEcCount = 0;
+	
+	var dcdata = new Array(rsBlocks.length);
+	var ecdata = new Array(rsBlocks.length);
+	
+	for (var r = 0; r < rsBlocks.length; r++) {
+
+		var dcCount = rsBlocks[r].dataCount;
+		var ecCount = rsBlocks[r].totalCount - dcCount;
+
+		maxDcCount = Math.max(maxDcCount, dcCount);
+		maxEcCount = Math.max(maxEcCount, ecCount);
+		
+		dcdata[r] = new Array(dcCount);
+		
+		for (var i = 0; i < dcdata[r].length; i++) {
+			dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+		}
+		offset += dcCount;
+		
+		var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+		var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+		var modPoly = rawPoly.mod(rsPoly);
+		ecdata[r] = new Array(rsPoly.getLength() - 1);
+		for (var x = 0; x < ecdata[r].length; x++) {
+            var modIndex = x + modPoly.getLength() - ecdata[r].length;
+			ecdata[r][x] = (modIndex >= 0)? modPoly.get(modIndex) : 0;
+		}
+
+	}
+	
+	var totalCodeCount = 0;
+	for (var y = 0; y < rsBlocks.length; y++) {
+		totalCodeCount += rsBlocks[y].totalCount;
+	}
+
+	var data = new Array(totalCodeCount);
+	var index = 0;
+
+	for (var z = 0; z < maxDcCount; z++) {
+		for (var s = 0; s < rsBlocks.length; s++) {
+			if (z < dcdata[s].length) {
+				data[index++] = dcdata[s][z];
+			}
+		}
+	}
+
+	for (var xx = 0; xx < maxEcCount; xx++) {
+		for (var t = 0; t < rsBlocks.length; t++) {
+			if (xx < ecdata[t].length) {
+				data[index++] = ecdata[t][xx];
+			}
+		}
+	}
+
+	return data;
+
+};
+
+module.exports = QRCode;
+
+}};
+window.QRLib={QRCode:R("index"),ECL:R("QRErrorCorrectLevel")};})();</script>
+<script>
+/* ================= AJUSTES PADRÃO (podem ser alterados no botão "Ajustes" do próprio tablet) ================= */
+const DEFAULTS = {
+  evento: "Feira internacional",
+  email: "neimar.barbosa@bioclin.com.br",
+  whatsapp: "",              // WhatsApp comercial da Bioclin, só dígitos com DDI. Ex.: 5531999998888
+  responsavel: "Neimar Barbosa",
+  prazo: "2 dias úteis",
+  linkCatalogo: "",          // link do PDF do catálogo completo (Google Drive, site da Bioclin etc.)
+  linkFormulario: "",        // opcional: link de um Google Forms. Vazio = QR 2 abre e-mail pré-preenchido
+  links: {}                  // opcional: link do PDF por linha, ex.: {"hum-bioq":"https://..."}
+};
+
+/* ================= TEXTOS ================= */
+const T = {
+  pt:{
+    about_eyebrow:"Sobre a Bioclin", about_title:"Qualidade é a nossa marca desde 1977", about_text:"A Bioclin é uma das maiores indústrias de diagnóstico in vitro da América Latina, com fábrica própria no Brasil e um amplo portfólio de reagentes, equipamentos e soluções desenvolvidas para transformar a rotina laboratorial com mais eficiência, confiança e competitividade.", about_text2:"Com certificações ISO 9001, ISO 13485 e GMP, combinamos tecnologia, qualidade e capacidade industrial para construir parcerias sólidas e levar soluções brasileiras de diagnóstico a clientes e mercados ao redor do mundo.", s_found:"fundação", s_prod:"produtos", s_team:"colaboradores", s_area:"de instalações", our_lines:"Nossas linhas", th_div:"Divisão", no_prod:"Lista de produtos desta linha em preparação. Use \"Quero cotação\" para receber informações.", next:"Conheça os produtos →", prev:"← Sobre a Bioclin", hint:"Deslize para o lado para ver as divisões",
+    leads:"Leads", settings:"Ajustes", home_eyebrow:"Catálogo de produtos", home_title:"Escolha a divisão",
+    home_lead:"Toque na divisão e depois na linha para ver a lista completa com códigos e apresentações.",
+    products:"produtos", lines:"Linhas", search:"Buscar por nome ou código",
+    th_code:"Código", th_name:"Produto", th_met:"Metodologia", th_apr:"Apresentação", th_an:"Analisadores", th_reg:"Registros",
+    example:"Exemplo", ex_note:"Produtos de exemplo. A lista real entra quando as linhas forem definidas.",
+    get_cat:"Receber catálogo", quote:"Quero cotação", seller_form:"Cadastro pelo vendedor",
+    qr1_title:"Leve o catálogo no seu celular", qr1_text:"Aponte a câmera do celular para o código para baixar o catálogo.",
+    qr2_title:"Solicite sua cotação", qr2_mail:"Aponte a câmera do celular para o código. Abre um e-mail pronto: é só completar e enviar.",
+    qr2_form:"Aponte a câmera do celular para o código e preencha o formulário em 1 minuto.",
+    reply:"Resposta em até", close:"Fechar",
+    no_link:"Falta o link do catálogo. Toque em Ajustes e cole o link do PDF (Google Drive ou site).",
+    form_title:"Cadastro de interesse", form_lead:"Preencha junto com o visitante. Os campos com * são obrigatórios.",
+    b_contact:"Dados do contato", name:"Nome", role:"Cargo", company:"Empresa", country:"País", city:"Cidade", email:"E-mail", whats:"WhatsApp",
+    b_profile:"Perfil da empresa", profile:"A empresa é",
+    p_dist:"Distribuidor / importador", p_lab:"Laboratório clínico", p_hosp:"Hospital", p_vet:"Clínica / laboratório veterinário", p_gov:"Órgão público", p_ind:"Indústria (private label / reenvase)", p_other:"Outro",
+    b_interest:"Interesse", divs:"Divisões", lines_int:"Linhas", prods:"Produtos de interesse", type:"Tipo de interesse",
+    t_quote:"Cotação", t_sample:"Amostra / avaliação", t_dist:"Distribuição / representação", t_reg:"Registro sanitário", t_info:"Informação técnica",
+    b_now:"Situação atual", ivd:"Já trabalha com diagnóstico in vitro?", yes:"Sim", no:"Não",
+    brands:"Marcas e linhas que trabalha hoje", equip:"Equipamentos / analisadores que usa ou atende", volume:"Volume estimado",
+    v1:"Até 1.000 testes/mês", v2:"1.000 a 10.000 testes/mês", v3:"Acima de 10.000 testes/mês", v0:"Não sabe informar",
+    regq:"Possui registro sanitário ou estrutura regulatória no país?", cover:"Área de cobertura (países / regiões)",
+    b_when:"Prazo e observações", when:"Quando pretende comprar ou iniciar?", w1:"Imediato (até 3 meses)", w2:"3 a 6 meses", w3:"Só pesquisando",
+    obs:"Observações", seller_note:"Nota do vendedor (uso interno)",
+    consent:"O visitante autoriza a Bioclin a usar estes dados para contato comercial (LGPD).",
+    send:"Salvar cadastro", select:"Selecione",
+    e_req:"Preencha os campos obrigatórios e marque o consentimento.",
+    ok_title:"Cadastro salvo no tablet", ok_text:"Classificação:",
+    mail_btn:"Enviar resumo por e-mail", new_lead:"Novo cadastro", back_cat:"Voltar ao catálogo",
+    cart_view:"Ver proposta", cart_title:"Produtos selecionados", cart_hint:"Toque no carrinho para montar uma proposta com os produtos de interesse.",
+    cart_lead:"Confira a lista, peça a proposta e a equipe Bioclin responde em {prazo}.",
+    cart_empty:"Nenhum produto selecionado ainda. Abra uma linha e toque no carrinho dos produtos de interesse.",
+    cart_add:"Adicionar à proposta", cart_remove:"Remover da proposta",
+    cart_ask:"Pedir proposta destes produtos", cart_clear:"Limpar seleção", cart_clear2:"Toque de novo para limpar",
+    cart_qr:"QR para o cliente pedir pelo celular", cart_qr_text:"O cliente aponta a câmera e envia o pedido com esta lista pelo e-mail dele.",
+    cart_more:"...e outros {n} produtos selecionados no estande.",
+    cart_mail_body:"Olá, equipe Bioclin.\n\nEstive no estande da Bioclin na {evento} e gostaria de receber uma proposta comercial para os produtos abaixo:\n\n{lista}\n\nEmpresa:\nPaís:\nContato:\n\nObrigado.",
+    pick_div:"Escolha a divisão", pick_lead:"Esta linha atende as duas divisões. Escolha para ver os produtos certos.", both_divs:"Ver as duas divisões juntas", sel_prods:"Produtos desta proposta", back_cart:"Voltar à proposta", home_btn:"Voltar ao início",
+    c_wa:"WhatsApp comercial", c_wa_hint:"Sem o código do país, assumimos o Brasil (+55).",
+    q_title:"Seus dados", q_lead:"Preencha o essencial e envie. O restante a gente completa no follow-up.",
+    q_contact:"Informe WhatsApp ou e-mail", q_req:"Faltam dados: nome, empresa, país, perfil, um contato e o consentimento.",
+    wa_send:"Enviar por WhatsApp", mail_send:"Enviar por e-mail", qr_client:"Cliente envia do celular dele",
+    qr_client_t:"O cliente aponta a câmera: abre o WhatsApp dele já com a lista e os dados escritos. Você fica com o número dele.",
+    full_form:"Cadastro completo (qualificação)", no_wa:"Digite o número aqui. Ele fica salvo neste aparelho e vale para os próximos envios.",
+    sent_title:"Pedido montado", sent_text:"Confira se a mensagem abriu. Se não abrir, use o botão abaixo.",
+    open_wa:"Abrir WhatsApp", open_mail:"Abrir e-mail", wa_head:"PROPOSTA BIOCLIN", m_profile:"Perfil", m_when:"Prazo",
+    l_title:"Leads da feira", l_lead:"Cadastros salvos neste tablet. Exporte o CSV ao fim de cada dia como cópia de segurança.",
+    k_total:"Total", k_hot:"Quentes", k_warm:"Mornos", k_cold:"Frios",
+    all:"Todos", hot:"Quente", warm:"Morno", cold:"Frio", export:"Exportar CSV", del:"Apagar este lead", del_confirm:"Toque de novo para confirmar",
+    l_empty:"Nenhum lead ainda. Os cadastros feitos em \"Cadastro pelo vendedor\" aparecem aqui.",
+    detail:"Ficha do produto", ifu:"Ficha técnica / IFU: [inserir link]",
+    cfg_title:"Ajustes da feira", cfg_lead:"Ficam salvos neste tablet. Os QR codes usam estes links.",
+    c_evento:"Nome da feira", c_email:"E-mail que recebe as cotações (QR 2)", c_resp:"Responsável", c_prazo:"Prazo de resposta",
+    c_cat:"Link do catálogo completo em PDF (QR 1)", c_form:"Link de formulário (opcional; vazio = e-mail pronto)",
+    c_lines:"Link do PDF por linha (opcional; vazio = catálogo completo)", save:"Salvar ajustes", saved:"Ajustes salvos",
+    nostore:"Este navegador não está guardando dados. Use o Chrome (Android) ou Safari e não use aba anônima.",
+    mail_subject:"Cotação Bioclin", mail_body:"Olá! Interesse na linha {linha} ({div}) - {evento}.\n\nNome:\nEmpresa / país:\nPerfil (distribuidor, laboratório, hospital, vet):\nProdutos de interesse:\nMarcas e equipamentos que usa:\nVolume e prazo de compra:\n"
+  },
+  es:{
+    about_eyebrow:"Sobre Bioclin", about_title:"La calidad es nuestra marca desde 1977", about_text:"Bioclin es una de las mayores industrias de diagnóstico in vitro de América Latina, con planta propia en Brasil y un amplio portafolio de reactivos, equipos y soluciones desarrolladas para transformar la rutina del laboratorio con más eficiencia, confianza y competitividad.", about_text2:"Con certificaciones ISO 9001, ISO 13485 y GMP, combinamos tecnología, calidad y capacidad industrial para construir alianzas sólidas y llevar soluciones brasileñas de diagnóstico a clientes y mercados de todo el mundo.", s_found:"fundación", s_prod:"productos", s_team:"colaboradores", s_area:"de instalaciones", our_lines:"Nuestras líneas", th_div:"División", no_prod:"Lista de productos de esta línea en preparación. Use \"Quiero cotización\" para recibir información.", next:"Conozca los productos →", prev:"← Sobre Bioclin", hint:"Deslice hacia el lado para ver las divisiones",
+    leads:"Leads", settings:"Ajustes", home_eyebrow:"Catálogo de productos", home_title:"Elija la división",
+    home_lead:"Toque la división y luego la línea para ver la lista completa con códigos y presentaciones.",
+    products:"productos", lines:"Líneas", search:"Buscar por nombre o código",
+    th_code:"Código", th_name:"Producto", th_met:"Metodología", th_apr:"Presentación", th_an:"Analizadores", th_reg:"Registros",
+    example:"Ejemplo", ex_note:"Productos de ejemplo. La lista real se carga cuando se definan las líneas.",
+    get_cat:"Recibir catálogo", quote:"Quiero cotización", seller_form:"Registro por el vendedor",
+    qr1_title:"Lleve el catálogo en su celular", qr1_text:"Apunte la cámara del celular al código para descargar el catálogo.",
+    qr2_title:"Solicite su cotización", qr2_mail:"Apunte la cámara del celular al código. Se abre un correo listo: solo complete y envíe.",
+    qr2_form:"Apunte la cámara del celular al código y complete el formulario en 1 minuto.",
+    reply:"Respuesta en hasta", close:"Cerrar",
+    no_link:"Falta el enlace del catálogo. Toque Ajustes y pegue el enlace del PDF (Google Drive o sitio web).",
+    form_title:"Registro de interés", form_lead:"Complete junto con el visitante. Los campos con * son obligatorios.",
+    b_contact:"Datos de contacto", name:"Nombre", role:"Cargo", company:"Empresa", country:"País", city:"Ciudad", email:"Correo electrónico", whats:"WhatsApp",
+    b_profile:"Perfil de la empresa", profile:"La empresa es",
+    p_dist:"Distribuidor / importador", p_lab:"Laboratorio clínico", p_hosp:"Hospital", p_vet:"Clínica / laboratorio veterinario", p_gov:"Institución pública", p_ind:"Industria (marca propia / reenvasado)", p_other:"Otro",
+    b_interest:"Interés", divs:"Divisiones", lines_int:"Líneas", prods:"Productos de interés", type:"Tipo de interés",
+    t_quote:"Cotización", t_sample:"Muestra / evaluación", t_dist:"Distribución / representación", t_reg:"Registro sanitario", t_info:"Información técnica",
+    b_now:"Situación actual", ivd:"¿Ya trabaja con diagnóstico in vitro?", yes:"Sí", no:"No",
+    brands:"Marcas y líneas que trabaja hoy", equip:"Equipos / analizadores que usa o atiende", volume:"Volumen estimado",
+    v1:"Hasta 1.000 pruebas/mes", v2:"1.000 a 10.000 pruebas/mes", v3:"Más de 10.000 pruebas/mes", v0:"No sabe",
+    regq:"¿Tiene registro sanitario o estructura regulatoria en el país?", cover:"Área de cobertura (países / regiones)",
+    b_when:"Plazo y observaciones", when:"¿Cuándo planea comprar o iniciar?", w1:"Inmediato (hasta 3 meses)", w2:"3 a 6 meses", w3:"Solo investigando",
+    obs:"Observaciones", seller_note:"Nota del vendedor (uso interno)",
+    consent:"El visitante autoriza a Bioclin a usar estos datos para contacto comercial.",
+    send:"Guardar registro", select:"Seleccione",
+    e_req:"Complete los campos obligatorios y marque el consentimiento.",
+    ok_title:"Registro guardado en la tableta", ok_text:"Clasificación:",
+    mail_btn:"Enviar resumen por correo", new_lead:"Nuevo registro", back_cat:"Volver al catálogo",
+    cart_view:"Ver propuesta", cart_title:"Productos seleccionados", cart_hint:"Toque el carrito para armar una propuesta con los productos de interés.",
+    cart_lead:"Revise la lista, pida la propuesta y el equipo Bioclin responde en {prazo}.",
+    cart_empty:"Todavía no hay productos seleccionados. Abra una línea y toque el carrito de los productos de interés.",
+    cart_add:"Añadir a la propuesta", cart_remove:"Quitar de la propuesta",
+    cart_ask:"Pedir propuesta de estos productos", cart_clear:"Limpiar selección", cart_clear2:"Toque de nuevo para limpiar",
+    cart_qr:"QR para que el cliente pida desde el móvil", cart_qr_text:"El cliente apunta la cámara y envía el pedido con esta lista desde su propio correo.",
+    cart_more:"...y otros {n} productos seleccionados en el estand.",
+    cart_mail_body:"Hola, equipo Bioclin.\n\nEstuve en el estand de Bioclin en {evento} y me gustaría recibir una propuesta comercial para los productos siguientes:\n\n{lista}\n\nEmpresa:\nPaís:\nContacto:\n\nGracias.",
+    pick_div:"Elija la división", pick_lead:"Esta línea atiende las dos divisiones. Elija para ver los productos correctos.", both_divs:"Ver las dos divisiones juntas", sel_prods:"Productos de esta propuesta", back_cart:"Volver a la propuesta", home_btn:"Volver al inicio",
+    c_wa:"WhatsApp comercial", c_wa_hint:"Sin el código de país, asumimos Brasil (+55).",
+    q_title:"Sus datos", q_lead:"Complete lo esencial y envíe. El resto lo completamos en el seguimiento.",
+    q_contact:"Indique WhatsApp o correo", q_req:"Faltan datos: nombre, empresa, país, perfil, un contacto y el consentimiento.",
+    wa_send:"Enviar por WhatsApp", mail_send:"Enviar por correo", qr_client:"El cliente envía desde su móvil",
+    qr_client_t:"El cliente apunta la cámara: se abre su WhatsApp con la lista y los datos ya escritos. Usted se queda con su número.",
+    full_form:"Registro completo (calificación)", no_wa:"Escriba el número aquí. Queda guardado en este aparato y vale para los próximos envíos.",
+    sent_title:"Pedido armado", sent_text:"Verifique si el mensaje se abrió. Si no, use el botón de abajo.",
+    open_wa:"Abrir WhatsApp", open_mail:"Abrir correo", wa_head:"PROPUESTA BIOCLIN", m_profile:"Perfil", m_when:"Plazo",
+    l_title:"Leads de la feria", l_lead:"Registros guardados en esta tableta. Exporte el CSV al final de cada día como respaldo.",
+    k_total:"Total", k_hot:"Calientes", k_warm:"Tibios", k_cold:"Fríos",
+    all:"Todos", hot:"Caliente", warm:"Tibio", cold:"Frío", export:"Exportar CSV", del:"Borrar este lead", del_confirm:"Toque de nuevo para confirmar",
+    l_empty:"Todavía no hay leads. Los registros hechos en \"Registro por el vendedor\" aparecen aquí.",
+    detail:"Ficha del producto", ifu:"Ficha técnica / IFU: [insertar enlace]",
+    cfg_title:"Ajustes de la feria", cfg_lead:"Se guardan en esta tableta. Los códigos QR usan estos enlaces.",
+    c_evento:"Nombre de la feria", c_email:"Correo que recibe las cotizaciones (QR 2)", c_resp:"Responsable", c_prazo:"Plazo de respuesta",
+    c_cat:"Enlace del catálogo completo en PDF (QR 1)", c_form:"Enlace de formulario (opcional; vacío = correo listo)",
+    c_lines:"Enlace del PDF por línea (opcional; vacío = catálogo completo)", save:"Guardar ajustes", saved:"Ajustes guardados",
+    nostore:"Este navegador no está guardando datos. Use Chrome (Android) o Safari y no use pestaña de incógnito.",
+    mail_subject:"Cotización Bioclin", mail_body:"¡Hola! Interés en la línea {linha} ({div}) - {evento}.\n\nNombre:\nEmpresa / país:\nPerfil (distribuidor, laboratorio, hospital, vet):\nProductos de interés:\nMarcas y equipos que usa:\nVolumen y plazo de compra:\n"
+  }
+};
+
+/* ================= PRODUTOS (EXEMPLOS até a lista real) ================= */
+const EXAMPLE=true;
+const DIVS=[{"id":"hum","pt":"Divisão Humana","es":"División Humana","dpt":"Reagentes para laboratórios clínicos e hospitais.","des":"Reactivos para laboratorios clínicos y hospitales."},{"id":"vet","pt":"Divisão Veterinária","es":"División Veterinaria","dpt":"Reagentes validados para amostras animais.","des":"Reactivos validados para muestras animales."}];
+const LINES=[{"id":"bioq","pt":"Bioquímica","es":"Bioquímica","divs":["hum","vet"]},{"id":"coag","pt":"Coagulação","es":"Coagulación","divs":["hum"]},{"id":"elisa","pt":"ELISA","es":"ELISA","divs":["hum","vet"]},{"id":"hemato","pt":"Hematologia","es":"Hematología","divs":["hum","vet"]},{"id":"molec","pt":"Biologia Molecular","es":"Biología Molecular","divs":["hum","vet"]},{"id":"sorol","pt":"Sorologia","es":"Serología","divs":["hum"]},{"id":"poct","pt":"POCT","es":"POCT","divs":["hum"]},{"id":"rapido","pt":"Teste Rápido","es":"Prueba Rápida","divs":["hum","vet"]}];
+const PRODUCTS=[{"div":"hum","line":"bioq","code":"EX-HBQ-01","pt":"Glicose","es":"Glucosa","met":"Enzimático GOD-PAP","apr":"2 × 50 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"hum","line":"bioq","code":"EX-HBQ-02","pt":"Colesterol total","es":"Colesterol total","met":"Enzimático CHOD-PAP","apr":"2 × 50 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"hum","line":"bioq","code":"EX-HBQ-03","pt":"Triglicérides","es":"Triglicéridos","met":"Enzimático GPO-PAP","apr":"2 × 50 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"hum","line":"bioq","code":"EX-HBQ-04","pt":"Creatinina","es":"Creatinina","met":"Cinético Jaffé","apr":"2 × 50 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"hum","line":"bioq","code":"EX-HBQ-05","pt":"Ureia UV","es":"Urea UV","met":"Cinético UV","apr":"2 × 50 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"hum","line":"bioq","code":"EX-HBQ-06","pt":"ALT / TGP","es":"ALT / GPT","met":"Cinético UV IFCC","apr":"4 × 25 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"hum","line":"coag","code":"EX-HCO-01","pt":"Tempo de protrombina (TP)","es":"Tiempo de protrombina (TP)","met":"Coagulométrico","apr":"10 × 4 mL","an":"Coagulômetros","reg":"[a confirmar]"},{"div":"hum","line":"coag","code":"EX-HCO-02","pt":"TTPa","es":"TTPa","met":"Coagulométrico","apr":"10 × 4 mL","an":"Coagulômetros","reg":"[a confirmar]"},{"div":"hum","line":"coag","code":"EX-HCO-03","pt":"Fibrinogênio","es":"Fibrinógeno","met":"Clauss","apr":"6 × 2 mL","an":"Coagulômetros","reg":"[a confirmar]"},{"div":"hum","line":"coag","code":"EX-HCO-04","pt":"Controle de coagulação N/P","es":"Control de coagulación N/P","met":"Plasma liofilizado","apr":"2 × 6 × 1 mL","an":"Coagulômetros","reg":"[a confirmar]"},{"div":"hum","line":"elisa","code":"EX-HEL-01","pt":"TSH","es":"TSH","met":"ELISA sanduíche","apr":"96 testes","an":"Leitoras de microplaca","reg":"[a confirmar]"},{"div":"hum","line":"elisa","code":"EX-HEL-02","pt":"HBsAg","es":"HBsAg","met":"ELISA sanduíche","apr":"96 testes","an":"Leitoras de microplaca","reg":"[a confirmar]"},{"div":"hum","line":"elisa","code":"EX-HEL-03","pt":"Anti-HCV","es":"Anti-HCV","met":"ELISA indireto","apr":"96 testes","an":"Leitoras de microplaca","reg":"[a confirmar]"},{"div":"hum","line":"elisa","code":"EX-HEL-04","pt":"Toxoplasmose IgG","es":"Toxoplasmosis IgG","met":"ELISA indireto","apr":"96 testes","an":"Leitoras de microplaca","reg":"[a confirmar]"},{"div":"vet","line":"bioq","code":"EX-VBQ-01","pt":"Glicose Vet","es":"Glucosa Vet","met":"Enzimático GOD-PAP","apr":"2 × 25 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"vet","line":"bioq","code":"EX-VBQ-02","pt":"ALT Vet","es":"ALT Vet","met":"Cinético UV","apr":"2 × 25 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"vet","line":"bioq","code":"EX-VBQ-03","pt":"Creatinina Vet","es":"Creatinina Vet","met":"Cinético Jaffé","apr":"2 × 25 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"vet","line":"bioq","code":"EX-VBQ-04","pt":"Ureia Vet","es":"Urea Vet","met":"Cinético UV","apr":"2 × 25 mL","an":"Sistemas abertos","reg":"[a confirmar]"},{"div":"vet","line":"elisa","code":"EX-VEL-01","pt":"Leishmaniose canina","es":"Leishmaniasis canina","met":"ELISA indireto","apr":"96 testes","an":"Leitoras de microplaca","reg":"[a confirmar]"},{"div":"vet","line":"elisa","code":"EX-VEL-02","pt":"Erliquiose canina","es":"Ehrlichiosis canina","met":"ELISA indireto","apr":"96 testes","an":"Leitoras de microplaca","reg":"[a confirmar]"},{"div":"vet","line":"elisa","code":"EX-VEL-03","pt":"FIV / FeLV","es":"FIV / FeLV","met":"ELISA","apr":"96 testes","an":"Leitoras de microplaca","reg":"[a confirmar]"}];
+
+/* ================= ESTADO E ARMAZENAMENTO NO TABLET ================= */
+const KEY_CFG = "bioclin_feira_cfg", KEY_LEADS = "bioclin_feira_leads", KEY_CART = "bioclin_feira_cart";
+let storageOK = true;
+function load(k, fb){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch(e){ storageOK = false; return fb; } }
+function store(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ storageOK = false; return false; } }
+const state = { lang:"pt", route:"", filter:"all",
+  cfg: Object.assign({}, DEFAULTS, load(KEY_CFG, {})),
+  leads: load(KEY_LEADS, []), cart: load(KEY_CART, []) };
+const $ = s => document.querySelector(s);
+/* parâmetros do QR: modo, feira, vendedor, divisão, linha, idioma */
+const QS = new URLSearchParams(location.search);
+const CLIENTE = QS.get("modo") === "cliente";
+const t = k => (T[state.lang][k] ?? T.pt[k] ?? k);
+const nm = o => o ? (o[state.lang] || o.pt) : "";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ALLDIV = {id:"all", pt:"Todas as divisões", es:"Todas las divisiones"};
+const divOf = id => id === "all" ? ALLDIV : DIVS.find(d => d.id === id);
+const inDiv = (p, div) => div === "all" || p.div === div;
+const linesOf = div => div === "all" ? LINES : LINES.filter(l => (l.divs || DIVS.map(d=>d.id)).includes(div));
+const lineOf = id => LINES.find(l => l.id === id);
+const SC = {quente:"hot", morno:"warm", frio:"cold"};
+
+/* ---------- Seleção de produtos (proposta) ---------- */
+const ICO_CART = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3.5h2.6l2.6 11.1a1.7 1.7 0 0 0 1.7 1.3h8.3a1.7 1.7 0 0 0 1.7-1.3L21 7.2H6"/></svg>`;
+const ICO_OK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.6l5.2 5.2L20 6.4"/></svg>`;
+const prodOf = c => PRODUCTS.find(p => p.code === c);
+const inCart = c => state.cart.includes(c);
+const cartProds = () => state.cart.map(prodOf).filter(Boolean);
+function toggleCart(c){
+  state.cart = inCart(c) ? state.cart.filter(x => x !== c) : state.cart.concat([c]);
+  store(KEY_CART, state.cart); paintAdd(c); refreshDock();
+}
+function clearCart(){ state.cart = []; store(KEY_CART, state.cart); }
+function paintAdd(c){
+  document.querySelectorAll(`[data-add="${CSS.escape(c)}"]`).forEach(b => {
+    const on = inCart(c);
+    b.classList.toggle("on", on); b.innerHTML = on ? ICO_OK : ICO_CART;
+    b.setAttribute("aria-pressed", String(on));
+    b.setAttribute("aria-label", on ? t("cart_remove") : t("cart_add"));
+  });
+}
+function cartDock(){
+  if (!state.cart.length || state.route === "cart" || state.route === "lead-cart") return;
+  const q = $("#b-qr2"); if (q) q.classList.remove("primary");   // a proposta passa a ser a ação principal
+  $("#dock-in").insertAdjacentHTML("beforeend",
+    `<button type="button" class="btn primary cart-go" data-go="cart">${t("cart_view")} <span class="count">${state.cart.length}</span></button>`);
+  $("#dock").hidden = false;
+}
+function refreshDock(){
+  const b = $("#dock-in .cart-go"); if (b) b.remove();
+  const q = $("#b-qr2"); if (q && !state.cart.length) q.classList.add("primary");
+  cartDock();
+  if (!$("#dock-in").children.length) $("#dock").hidden = true;
+}
+
+function go(r){ state.route = r; closeSheet(); render(); window.scrollTo(0,0); }
+
+function render(){
+  document.documentElement.lang = state.lang === "es" ? "es" : "pt-BR";
+  document.querySelectorAll("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
+  ["pt","es"].forEach(l => $("#lang-"+l).setAttribute("aria-pressed", String(state.lang===l)));
+  $("#leads-count").textContent = state.leads.length;
+  if (CLIENTE) { $("#leads-btn").hidden = true; $("#cfg-btn").hidden = true; }
+  $("#dock").hidden = true; $("#dock-in").innerHTML = "";
+  const p = state.route.split("-");
+  if (state.route === "leads") viewLeads();
+  else if (state.route === "cfg") viewCfg();
+  else if (state.route === "cart") viewCart();
+  else if (state.route === "lead-cart") viewForm(null, null);
+  else if (p[0] === "lin" && lineOf(p[1])) viewLineDiv(p[1]);
+  else if (p[0] === "div" && divOf(p[1]) && p[1] !== "all") viewDivision(p[1]);
+  else if (p[0] === "cat" && divOf(p[1]) && lineOf(p[2])) viewLine(p[1], p[2]);
+  else if (p[0] === "lead" && divOf(p[1]) && lineOf(p[2])) viewForm(p[1], p[2]);
+  else viewHome(state.route === "divs" ? 1 : 0);
+  cartDock();
+}
+
+function storeWarn(){ return (storageOK || CLIENTE) ? "" : `<p class="warn">${t("nostore")}</p>`; }
+
+function viewHome(start){
+  $("#app").innerHTML = `${storeWarn()}
+    <div class="slider" id="slider">
+      <section class="panel" aria-label="${t("about_eyebrow")}">
+        <div class="about-grid">
+          <div class="hero">
+            <p class="eyebrow">${t("about_eyebrow")}</p>
+            <h1>${t("about_title")}</h1>
+            <p>${t("about_text")}</p>
+            <p>${t("about_text2")}</p>
+          </div>
+          <div class="col">
+            <p class="eyebrow">${t("divs")}</p>
+            <div class="div-list">${DIVS.map(d => `<button type="button" class="div-card d-${d.id}" data-go="div-${d.id}">
+              <b>${esc(nm(d))}</b><span>${esc(state.lang==="es"?d.des:d.dpt)}</span>
+              <small>${linesOf(d.id).map(l=>esc(nm(l))).join(" · ")}</small><i aria-hidden="true">›</i></button>`).join("")}</div>
+          </div>
+          <div class="col">
+            <p class="eyebrow">${t("our_lines")}</p>
+            <ul class="lines-list">${LINES.map(l=>`<li><button type="button" data-go="lin-${l.id}">${esc(nm(l))}<i aria-hidden="true">›</i></button></li>`).join("")}</ul>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>1977</b><span>${t("s_found")}</span></div>
+          <div class="stat"><b>+200</b><span>${t("s_prod")}</span></div>
+          <div class="stat"><b>+150</b><span>${t("s_team")}</span></div>
+          <div class="stat"><b>2.800 m²</b><span>${t("s_area")}</span></div>
+        </div>
+      </section>
+      <section class="panel" aria-label="${t("home_title")}">
+        <p class="eyebrow">${t("home_eyebrow")}</p>
+        <h1 style="font-size:40px;margin-top:4px">${t("home_title")}</h1>
+        <p class="lead-in">${t("home_lead")}</p>
+        <div class="grid two">${DIVS.map(d => {
+          const n = PRODUCTS.filter(p => p.div===d.id).length;
+          return `<button type="button" class="tile d-${d.id}" data-go="div-${d.id}">
+            <h2>${esc(nm(d))}</h2><p>${esc(state.lang==="es"?d.des:d.dpt)}</p>
+            <span class="meta">${linesOf(d.id).map(l=>esc(nm(l))).join(" · ")} · ${n} ${t("products")}</span></button>`;
+        }).join("")}</div>
+      </section>
+    </div>
+    <div class="pager">
+      <div class="dots"><button type="button" aria-label="1" data-p="0"></button><button type="button" aria-label="2" data-p="1"></button></div>
+      <span class="hint" id="hint">${t("hint")}</span>
+      <button type="button" class="btn primary" id="pg">${t("next")}</button>
+    </div>`;
+  const sl = $("#slider");
+  const cur = () => Math.round(sl.scrollLeft / sl.clientWidth);
+  const to = i => { sl.scrollTo({left: i * sl.clientWidth, behavior: "smooth"}); };
+  const sync = () => {
+    if (!document.body.contains(sl)) return;
+    const i = cur();
+    document.querySelectorAll(".dots button").forEach((b,k) => b.setAttribute("aria-current", String(k===i)));
+    $("#pg").textContent = t(i ? "prev" : "next");
+    $("#hint").hidden = i === 1;
+    state.route = i ? "divs" : "";
+  };
+  sl.addEventListener("scroll", () => { clearTimeout(sl._t); sl._t = setTimeout(sync, 80); });
+  document.querySelectorAll(".dots button").forEach(b => b.onclick = () => to(+b.dataset.p));
+  $("#pg").onclick = () => to(cur() ? 0 : 1);
+  sl.style.scrollBehavior = "auto"; sl.scrollLeft = (start||0) * sl.clientWidth; sl.style.scrollBehavior = "";
+  sync();
+}
+
+function viewDivision(div){
+  const d = divOf(div);
+  $("#app").innerHTML = `
+    <nav class="crumbs"><button type="button" data-go="divs">${t("home_eyebrow")}</button><span>›</span><span>${esc(nm(d))}</span></nav>
+    <p class="eyebrow">${t("lines")}</p>
+    <h1 style="font-size:36px;margin-top:4px">${esc(nm(d))}</h1>
+    <div class="grid three">${linesOf(div).map(l => {
+      const ps = PRODUCTS.filter(p => p.div===div && p.line===l.id);
+      return `<button type="button" class="tile d-${div}" data-go="cat-${div}-${l.id}">
+        <h3>${esc(nm(l))}</h3><p>${ps.slice(0,3).map(p=>esc(nm(p))).join(", ")}${ps.length>3?"…":""}</p>
+        <span class="meta">${ps.length} ${t("products")}</span></button>`;
+    }).join("")}</div>`;
+}
+
+/* linha escolhida na home: primeiro a divisão, depois os produtos */
+const divsOfLine = line => { const l = lineOf(line); return DIVS.filter(d => (l && l.divs ? l.divs : DIVS.map(x=>x.id)).includes(d.id)); };
+function viewLineDiv(line){
+  const l = lineOf(line), ds = divsOfLine(line);
+  if (ds.length === 1) return go("cat-" + ds[0].id + "-" + line);      // linha de uma divisão só: vai direto
+  const show = ds.length ? ds : DIVS;
+  $("#app").innerHTML = `
+    <nav class="crumbs"><button type="button" data-go="">${t("about_eyebrow")}</button><span>\u203a</span><span>${esc(nm(l))}</span></nav>
+    <p class="eyebrow">${t("pick_div")}</p>
+    <h1 style="font-size:36px;margin-top:4px">${esc(nm(l))}</h1>
+    <p class="lead-in">${t("pick_lead")}</p>
+    <div class="grid two">${show.map(d => {
+      const n = PRODUCTS.filter(p => p.div === d.id && p.line === line).length;
+      return `<button type="button" class="tile d-${d.id}" data-go="cat-${d.id}-${line}">
+        <h2>${esc(nm(d))}</h2><p>${esc(state.lang==="es"?d.des:d.dpt)}</p>
+        <span class="meta">${n} ${t("products")}</span></button>`;
+    }).join("")}</div>
+    <div class="cartbar"><button type="button" data-go="cat-all-${line}">${t("both_divs")}</button></div>`;
+}
+
+function viewLine(div, line){
+  const d = divOf(div), l = lineOf(line);
+  $("#app").innerHTML = `
+    <nav class="crumbs"><button type="button" data-go="">${t("about_eyebrow")}</button><span>›</span>${div==="all" ? `<button type="button" data-go="lin-${line}">${t("pick_div")}</button><span>›</span>` : `<button type="button" data-go="div-${div}">${esc(nm(d))}</button><span>›</span>`}<span>${esc(nm(l))}</span></nav>
+    <div class="head-row">
+      <div><p class="eyebrow">${esc(nm(d))}</p><h1 style="font-size:36px;margin-top:4px">${esc(nm(l))}</h1></div>
+      <input class="search" id="q" type="search" placeholder="${t("search")}" aria-label="${t("search")}">
+    </div>
+    <p class="note" style="margin-top:0">${t("cart_hint")}</p>
+    <div class="tbl-wrap"><table><thead><tr>
+      <th class="sel"></th><th>${t("th_code")}</th><th>${t("th_name")}</th>${div==="all"?`<th>${t("th_div")}</th>`:""}<th>${t("th_met")}</th><th>${t("th_apr")}</th><th>${t("th_an")}</th><th>${t("th_reg")}</th>
+    </tr></thead><tbody id="rows"></tbody></table></div>
+    <div class="empty" id="noprod" hidden>${t("no_prod")}</div>
+    ${EXAMPLE ? `<p class="note"><span class="tag">${t("example")}</span> ${t("ex_note")}</p>` : ""}`;
+  const draw = () => {
+    const q = ($("#q").value || "").toLowerCase();
+    const all = PRODUCTS.filter(p => inDiv(p,div) && p.line===line);
+    const ps = all.filter(p => !q || (p.code+" "+p.pt+" "+p.es).toLowerCase().includes(q));
+    $(".tbl-wrap").hidden = !all.length; $("#noprod").hidden = !!all.length;
+    $("#rows").innerHTML = ps.map(p => `<tr data-code="${esc(p.code)}">
+      <td class="sel"><button type="button" class="add${inCart(p.code)?" on":""}" data-add="${esc(p.code)}" aria-pressed="${inCart(p.code)}" aria-label="${inCart(p.code)?t("cart_remove"):t("cart_add")}">${inCart(p.code)?ICO_OK:ICO_CART}</button></td>
+      <td class="code">${esc(p.code)}</td><td class="pname">${esc(nm(p))}</td>${div==="all"?`<td>${esc(nm(divOf(p.div)))}</td>`:""}<td>${esc(p.met)}</td><td>${esc(p.apr)}</td><td>${esc(p.an)}</td><td>${esc(p.reg)}</td></tr>`).join("");
+  };
+  draw();
+  $("#q").addEventListener("input", draw);
+  $("#rows").addEventListener("click", e => {
+    const a = e.target.closest("[data-add]");
+    if (a) { toggleCart(a.dataset.add); return; }
+    const tr = e.target.closest("tr"); if (tr) showProduct(tr.dataset.code);
+  });
+  $("#dock-in").innerHTML = `
+    <button type="button" class="btn" id="b-qr1">${t("get_cat")}</button>
+    <button type="button" class="btn primary" id="b-qr2">${t("quote")}</button>
+    ${CLIENTE ? "" : `<button type="button" class="btn ghost" data-go="lead-${div}-${line}">${t("seller_form")}</button>`}`;
+  $("#b-qr1").onclick = () => showQR1(div, line);
+  $("#b-qr2").onclick = () => showQR2(div, line);
+  $("#dock").hidden = false;
+}
+
+function showProduct(code){
+  const p = PRODUCTS.find(x => x.code === code); if (!p) return;
+  openSheet(`<p class="eyebrow">${t("detail")}${EXAMPLE ? ` · <span class="tag">${t("example")}</span>` : ""}</p>
+    <h2>${esc(nm(p))}</h2>
+    <dl class="spec"><dt>${t("th_code")}</dt><dd class="code">${esc(p.code)}</dd><dt>${t("th_met")}</dt><dd>${esc(p.met)}</dd>
+    <dt>${t("th_apr")}</dt><dd>${esc(p.apr)}</dd><dt>${t("th_an")}</dt><dd>${esc(p.an)}</dd><dt>${t("th_reg")}</dt><dd>${esc(p.reg)}</dd></dl>
+    <button type="button" class="btn primary" id="p-add">${inCart(code)?t("cart_remove"):t("cart_add")}</button>
+    <p class="note">${t("ifu")}</p>`);
+  $("#p-add").onclick = () => { toggleCart(code); $("#p-add").textContent = inCart(code) ? t("cart_remove") : t("cart_add"); };
+}
+
+/* ---------- QR codes ---------- */
+function drawQR(target, text){
+  const L = window.QRLib, q = new L.QRCode(-1, text.length > 300 ? L.ECL.L : L.ECL.M);
+  q.addData(text); q.make();
+  const n = q.getModuleCount(), quiet = 4, px = Math.max(4, Math.floor(640 / (n + quiet*2)));
+  const size = (n + quiet*2) * px, c = document.createElement("canvas");
+  c.width = c.height = size;
+  const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0,0,size,size); g.fillStyle = "#0b1f29";
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r,k)) g.fillRect((k+quiet)*px, (r+quiet)*px, px, px);
+  target.appendChild(c);
+}
+function head(div, line){ return `<p class="eyebrow">${esc(nm(divOf(div)))} · ${esc(nm(lineOf(line)))}</p>`; }
+function showQR1(div, line){
+  const url = (state.cfg.links || {})[div+"-"+line] || state.cfg.linkCatalogo;
+  openSheet(`${head(div,line)}<h2>${t("qr1_title")}</h2><p style="margin:0">${t("qr1_text")}</p>
+    ${url ? `<div class="qrbox" id="qr"></div><div class="url">${esc(url)}</div>` : `<p class="warn">${t("no_link")}</p><button type="button" class="btn" data-go="cfg">${t("settings")}</button>`}`);
+  if (url) drawQR($("#qr"), url);
+}
+function mailFor(div, line){
+  const body = t("mail_body").replace("{linha}", nm(lineOf(line))).replace("{div}", nm(divOf(div))).replace("{evento}", state.cfg.evento);
+  const subj = t("mail_subject") + " - " + nm(lineOf(line)) + " - " + state.cfg.evento;
+  return "mailto:" + state.cfg.email + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+}
+function showQR2(div, line){
+  const form = state.cfg.linkFormulario, url = form || mailFor(div, line);
+  openSheet(`${head(div,line)}<h2>${t("qr2_title")}</h2>
+    <p style="margin:0">${t(form?"qr2_form":"qr2_mail")} ${t("reply")} ${esc(state.cfg.prazo)}.</p>
+    <div class="qrbox" id="qr"></div><div class="url">${esc(form || state.cfg.email)}</div>`);
+  drawQR($("#qr"), url);
+}
+
+/* ---------- Proposta: montar e enviar ---------- */
+const waNum = () => String(state.cfg.whatsapp || "").replace(/\D/g,"");
+/* sem DDI assumimos Brasil: 10 ou 11 dígitos viram 55+ */
+function normWa(v){ const n = String(v||"").replace(/\D/g,""); return (n.length===10||n.length===11) ? "55"+n : n; }
+function cartList(){ return cartProds().map(p => "- " + p.code + " · " + nm(p)); }
+
+/* monta o texto do pedido; corta a lista se o link ficar longo demais */
+function propText(d, limit, wrap){
+  const all = cartList();
+  for (let cut = 0; ; cut++){
+    const list = cut ? all.slice(0, all.length - cut) : all;
+    const quem = [
+      d.nome ? t("name") + ": " + d.nome : "",
+      d.empresa ? t("company") + ": " + d.empresa : "",
+      d.pais ? t("country") + ": " + d.pais : "",
+      d.whatsapp ? t("whats") + ": " + d.whatsapp : "",
+      d.email ? t("email") + ": " + d.email : "",
+      d.perfil ? t("m_profile") + ": " + t("p_" + d.perfil) : "",
+      d.prazo ? t("m_when") + ": " + t(d.prazo) : ""
+    ].filter(Boolean).join("\n");
+    const txt = [
+      t("wa_head") + " — " + state.cfg.evento,
+      quem,
+      t("prods") + " (" + all.length + "):\n" + list.join("\n") + (cut ? "\n" + t("cart_more").replace("{n}", cut) : "")
+    ].filter(Boolean).join("\n\n");
+    const out = wrap(txt);
+    if (out.length <= limit || list.length <= 1) return out;
+  }
+}
+const waURL = d => waNum() ? propText(d, 1800, x => "https://wa.me/" + waNum() + "?text=" + encodeURIComponent(x)) : "";
+const mailURL = d => propText(d, 1800, x =>
+  "mailto:" + state.cfg.email + "?subject=" + encodeURIComponent(t("mail_subject") + " - " + (d.empresa || state.cfg.evento)) + "&body=" + encodeURIComponent(x));
+/* QR: o visitante escaneia e a mensagem sai do celular dele */
+const qrURL = d => waNum() ? propText(d, 1100, x => "https://wa.me/" + waNum() + "?text=" + encodeURIComponent(x))
+                           : propText(d, 1100, x => "mailto:" + state.cfg.email + "?subject=" + encodeURIComponent(t("mail_subject")) + "&body=" + encodeURIComponent(x));
+
+function quickData(){
+  const fd = new FormData($("#qf")), v = n => String(fd.get(n) || "").trim();
+  return { nome:v("nome"), empresa:v("empresa"), pais:v("pais"), whatsapp:v("whatsapp"), email:v("email"),
+           perfil:v("perfil"), prazo:v("prazo"), consent: !!fd.get("consent") };
+}
+const quickOK = d => d.nome && d.empresa && d.pais && d.perfil && (d.whatsapp || d.email) && d.consent;
+
+function saveQuick(d, via){
+  const items = cartProds();
+  const lead = { id: Date.now().toString(36), criadoEm: new Date().toISOString(), evento: state.cfg.evento, idioma: state.lang,
+    origem: "proposta-" + via, vendedor: state.qr.vend, divisaoOrigem:"", linhaOrigem:"",
+    nome:d.nome, cargo:"", empresa:d.empresa, pais:d.pais, cidade:"", email:d.email, whatsapp:d.whatsapp,
+    perfil:d.perfil, divisoes:[...new Set(items.map(p=>p.div))], linhas:[...new Set(items.map(p=>p.line))],
+    produtos: items.map(p=>p.code), tipo:["quote"],
+    atuaIVD:"", marcas:"", equipamentos:"", volume:"", registro:"", cobertura:"",
+    prazo:d.prazo, obs:"", nota:"" };
+  lead.score = scoreOf(lead);
+  state.leads.unshift(lead); store(KEY_LEADS, state.leads);
+  $("#leads-count").textContent = state.leads.length;
+  return lead;
+}
+function sentView(lead, url, via){
+  clearCart(); $("#dock").hidden = true; $("#dock-in").innerHTML = "";
+  state.route = "";
+  $("#app").innerHTML = `<div class="done">
+    <h2>${t("sent_title")}</h2>
+    <p style="margin:0">${t("ok_text")} <span class="score s-${lead.score}">${t(SC[lead.score])}</span></p>
+    <p style="margin:0;color:var(--muted)">${t("sent_text")}</p>
+    <pre class="summary">${esc(summary(lead))}</pre>
+    <div class="toolbar">
+      <a class="btn primary" href="${esc(url)}" target="_blank" rel="noopener">${t(via==="wa"?"open_wa":"open_mail")}</a>
+      <button type="button" class="btn ghost" data-go="">${t("home_btn")}</button>
+    </div></div>`;
+  window.scrollTo(0,0);
+}
+
+/* cadastra o WhatsApp da Bioclin sem sair da tela */
+function askWa(){
+  openSheet(`<h2>${t("c_wa")}</h2><p style="margin:0">${t("no_wa")}</p>
+    <label class="f"><span class="lbl">${t("c_wa")}</span><input id="wa-in" inputmode="tel" placeholder="5531988887777" value="${esc(state.cfg.whatsapp||"")}"><small class="hintwa" id="wa-prev">${t("c_wa_hint")}</small></label>
+    <button type="button" class="btn primary" id="wa-ok">${t("save")}</button>`);
+  $("#wa-in").focus();
+  $("#wa-in").addEventListener("input", () => { const n = normWa($("#wa-in").value); $("#wa-prev").textContent = n ? "wa.me/" + n : t("c_wa_hint"); });
+  $("#wa-ok").onclick = () => {
+    const n = normWa($("#wa-in").value);
+    if (n.length < 8) { $("#wa-in").focus(); return; }
+    state.cfg.whatsapp = n; store(KEY_CFG, state.cfg); closeSheet(); render();
+  };
+}
+
+function viewCart(){
+  const items = cartProds(), wa = waNum();
+  $("#app").innerHTML = `${storeWarn()}
+    <nav class="crumbs"><button type="button" data-go="">${t("about_eyebrow")}</button><span>›</span><span>${t("cart_title")}</span></nav>
+    <p class="eyebrow">${esc(state.cfg.evento)}</p>
+    <h1 style="font-size:36px;margin-top:4px">${t("cart_title")}</h1>
+    <p class="lead-in">${t("cart_lead").replace("{prazo}", esc(state.cfg.prazo))}</p>
+    ${items.length ? `<div class="tbl-wrap"><table><thead><tr>
+      <th>${t("th_code")}</th><th>${t("th_name")}</th><th>${t("th_div")}</th><th>${t("lines")}</th><th class="sel"></th>
+    </tr></thead><tbody>${items.map(p => `<tr>
+      <td class="code">${esc(p.code)}</td><td class="pname">${esc(nm(p))}</td>
+      <td>${esc(nm(divOf(p.div)))}</td><td>${esc(nm(lineOf(p.line)))}</td>
+      <td class="sel"><button type="button" class="rm" data-rm="${esc(p.code)}" aria-label="${t("cart_remove")}">×</button></td>
+    </tr>`).join("")}</tbody></table></div>
+    <div class="cartbar">${CLIENTE ? "" : `<button type="button" data-go="lead-cart">${t("full_form")}</button>`}<button type="button" id="b-clr">${t("cart_clear")}</button></div>
+    <form id="qf" class="quick" novalidate autocomplete="off"><fieldset><legend>${t("q_title")}</legend>
+      <label class="f"><span class="lbl">${t("name")} <b class="req">*</b></span><input name="nome"></label>
+      <label class="f"><span class="lbl">${t("company")} <b class="req">*</b></span><input name="empresa"></label>
+      <label class="f"><span class="lbl">${t("country")} <b class="req">*</b></span><input name="pais"></label>
+      <label class="f">${t("whats")}<input name="whatsapp" inputmode="tel" placeholder="+__"></label>
+      <label class="f">${t("email")}<input name="email" type="email"></label>
+      <label class="f"><span class="lbl">${t("m_profile")} <b class="req">*</b></span>
+        <select name="perfil"><option value="">${t("select")}</option>
+        ${["dist","lab","hosp","vet","gov","ind","other"].map(k=>`<option value="${k}">${t("p_"+k)}</option>`).join("")}</select></label>
+      <div class="full"><div class="grp-label">${t("when")}</div>${chips("prazo", [["w1",t("w1")],["w2",t("w2")],["w3",t("w3")]], [], "radio")}</div>
+      <label class="consent full"><input type="checkbox" name="consent"> <span>${t("consent")}</span></label>
+      <p class="note full" style="margin:0">${t("q_contact")}</p>
+      <p class="err full" id="qerr" hidden>${t("q_req")}</p>
+    </fieldset></form>`
+      : `<div class="empty">${t("cart_empty")}</div>`}`;
+  if (!items.length) return;
+  document.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => {
+    state.cart = state.cart.filter(x => x !== b.dataset.rm); store(KEY_CART, state.cart); viewCart();
+  });
+  let armed = false;
+  $("#b-clr").onclick = () => {
+    if (!armed) { armed = true; $("#b-clr").textContent = t("cart_clear2"); return; }
+    clearCart(); go("");
+  };
+  $("#dock-in").innerHTML = `
+    <a class="btn primary" id="b-wa" href="#" target="_blank" rel="noopener">${t("wa_send")}</a>
+    <a class="btn${wa?"":" primary"}" id="b-ml" href="#" target="_blank" rel="noopener">${t("mail_send")}</a>
+    ${CLIENTE ? "" : `<button type="button" class="btn ghost" id="b-qrc">${t("qr_client")}</button>`}`;
+  $("#dock").hidden = false;
+  const sync = () => {
+    const d = quickData();
+    $("#b-wa").href = waURL(d) || "#";
+    $("#b-ml").href = mailURL(d);
+  };
+  $("#qf").addEventListener("input", sync);
+  $("#qf").addEventListener("change", sync);
+  sync();
+  const guard = (a, via) => a.addEventListener("click", e => {
+    const d = quickData();
+    if (via === "wa" && !waNum()) { e.preventDefault(); askWa(); return; }
+    if (!quickOK(d)) { e.preventDefault(); $("#qerr").hidden = false; $("#qf").scrollIntoView({block:"center"}); return; }
+    const lead = saveQuick(d, via);
+    setTimeout(() => sentView(lead, a.href, via), 60);   // deixa o link abrir antes de trocar a tela
+  });
+  guard($("#b-wa"), "wa"); guard($("#b-ml"), "mail");
+  if ($("#b-qrc")) $("#b-qrc").onclick = () => {
+    const d = quickData();
+    openSheet(`<p class="eyebrow">${t("cart_title")} · ${items.length}</p><h2>${t("qr_client")}</h2>
+      <p style="margin:0">${t("qr_client_t")}</p>
+      <div class="qrbox" id="qr"></div><div class="url">${esc(wa ? "wa.me/" + wa : state.cfg.email)}</div>`);
+    drawQR($("#qr"), qrURL(d));
+  };
+}
+
+function openSheet(html){
+  const o = $("#overlay");
+  o.innerHTML = `<div class="sheet" role="dialog" aria-modal="true">${html}<button type="button" class="btn" id="sheet-close">${t("close")}</button></div>`;
+  o.hidden = false; $("#sheet-close").onclick = closeSheet;
+}
+function closeSheet(){ $("#overlay").hidden = true; $("#overlay").innerHTML = ""; }
+$("#overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeSheet(); });
+
+/* ---------- Formulário ---------- */
+const chips = (name, opts, checked=[], type="checkbox") =>
+  `<div class="chips">${opts.map(([v,l]) => `<label class="chip"><input type="${type}" name="${name}" value="${esc(v)}" ${checked.includes(v)?"checked":""}><span>${esc(l)}</span></label>`).join("")}</div>`;
+
+function viewForm(div, line){
+  const cart = !div;                                        // proposta montada pelo cliente
+  const items = cartProds();
+  const prods = (cart ? items : PRODUCTS.filter(p => inDiv(p,div))).map(p => [p.code, p.code+" · "+nm(p)]);
+  const cDivs = cart ? [...new Set(items.map(p => p.div))] : [div];
+  const cLines = cart ? [...new Set(items.map(p => p.line))] : [line];
+  $("#app").innerHTML = `${storeWarn()}
+    <nav class="crumbs">${cart
+      ? `<button type="button" data-go="cart">${t("back_cart")}</button>`
+      : `<button type="button" data-go="cat-${div}-${line}">${t("back_cat")}</button>`}</nav>
+    <p class="eyebrow">${cart ? `${t("cart_title")} · ${items.length}` : `${esc(nm(divOf(div)))} · ${esc(nm(lineOf(line)))}`}</p>
+    <h1 style="font-size:34px;margin-top:4px">${t("form_title")}</h1>
+    <p class="lead-in">${t("form_lead")}</p>
+    <form id="lf" novalidate autocomplete="off">
+      <fieldset><legend>${t("b_contact")}</legend>
+        <label class="f"><span class="lbl">${t("name")} <b class="req">*</b></span><input name="nome"></label>
+        <label class="f">${t("role")}<input name="cargo"></label>
+        <label class="f"><span class="lbl">${t("company")} <b class="req">*</b></span><input name="empresa"></label>
+        <label class="f"><span class="lbl">${t("country")} <b class="req">*</b></span><input name="pais"></label>
+        <label class="f">${t("city")}<input name="cidade"></label>
+        <label class="f"><span class="lbl">${t("email")} <b class="req">*</b></span><input name="email" type="email"></label>
+        <label class="f">${t("whats")}<input name="whatsapp" type="tel"></label>
+      </fieldset>
+      <fieldset><legend>${t("b_profile")}</legend>
+        <label class="f full"><span class="lbl">${t("profile")} <b class="req">*</b></span>
+          <select id="f-profile" name="perfil"><option value="">${t("select")}</option>
+            ${["dist","lab","hosp","vet","gov","ind","other"].map(k=>`<option value="${k}">${t("p_"+k)}</option>`).join("")}
+          </select></label>
+      </fieldset>
+      <fieldset><legend>${t("b_interest")}</legend>
+        <div class="full"><div class="grp-label">${t("divs")}</div>${chips("divs", DIVS.map(d=>[d.id,nm(d)]), cDivs)}</div>
+        <div class="full"><div class="grp-label">${t("lines_int")}</div>${chips("linhas", LINES.map(l=>[l.id,nm(l)]), cLines)}</div>
+        <div class="full"><div class="grp-label">${cart ? t("sel_prods") : t("prods")}</div>${chips("produtos", prods, cart ? state.cart : [])}</div>
+        <div class="full"><div class="grp-label">${t("type")}</div>${chips("tipo", ["quote","sample","dist","reg","info"].map(k=>[k,t("t_"+k)]), cart ? ["quote"] : [])}</div>
+      </fieldset>
+      <fieldset><legend>${t("b_now")}</legend>
+        <div class="full"><div class="grp-label">${t("ivd")}</div>${chips("ivd", [["sim",t("yes")],["nao",t("no")]], [], "radio")}</div>
+        <label class="f">${t("brands")}<input name="marcas"></label>
+        <label class="f">${t("equip")}<input name="equipamentos"></label>
+        <label class="f">${t("volume")}<select name="volume"><option value="">${t("select")}</option>
+          ${["v1","v2","v3","v0"].map(k=>`<option value="${k}">${t(k)}</option>`).join("")}</select></label>
+        <div class="full dist-only" hidden><div class="grp-label">${t("regq")}</div>${chips("registro", [["sim",t("yes")],["nao",t("no")]], [], "radio")}</div>
+        <label class="f full dist-only" hidden>${t("cover")}<input name="cobertura"></label>
+      </fieldset>
+      <fieldset><legend>${t("b_when")}</legend>
+        <div class="full"><div class="grp-label">${t("when")}</div>${chips("prazo", [["w1",t("w1")],["w2",t("w2")],["w3",t("w3")]], [], "radio")}</div>
+        <label class="f full">${t("obs")}<textarea name="obs" rows="3"></textarea></label>
+        <label class="f full">${t("seller_note")}<textarea name="nota" rows="2"></textarea></label>
+        <label class="consent full"><input type="checkbox" name="consent"> <span>${t("consent")}</span></label>
+      </fieldset>
+      <p class="err" id="ferr" hidden>${t("e_req")}</p>
+      <button class="btn primary" type="submit" style="align-self:flex-start;min-height:56px;font-size:17px;padding:12px 28px">${t("send")}</button>
+    </form>`;
+  const sel = $("#f-profile");
+  sel.addEventListener("change", () => document.querySelectorAll(".dist-only").forEach(el => el.hidden = !["dist","ind"].includes(sel.value)));
+  $("#lf").addEventListener("submit", e => { e.preventDefault(); saveLead(div, line); });
+}
+
+function scoreOf(l){
+  const strong = ["dist","ind"].includes(l.perfil);
+  const buying = l.tipo.includes("quote") || l.tipo.includes("sample") || l.tipo.includes("dist");
+  if ((strong && l.prazo === "w1") || (buying && l.prazo === "w1") || (buying && ["v2","v3"].includes(l.volume))) return "quente";
+  if (strong || l.prazo === "w2" || buying || l.tipo.includes("info")) return "morno";
+  return "frio";
+}
+
+function saveLead(div, line){
+  const fd = new FormData($("#lf"));
+  const all = n => fd.getAll(n).map(String), v = n => String(fd.get(n) || "").trim();
+  const ok = ["nome","empresa","pais","email","perfil"].every(n => v(n)) && fd.get("consent");
+  $("#ferr").hidden = !!ok; if (!ok) { $("#ferr").scrollIntoView({block:"center"}); return; }
+  const lead = { id: Date.now().toString(36), criadoEm: new Date().toISOString(), evento: state.cfg.evento, idioma: state.lang,
+    origem: div ? "catalogo" : "proposta", vendedor: state.qr.vend, divisaoOrigem: div || "", linhaOrigem: line || "",
+    nome:v("nome"), cargo:v("cargo"), empresa:v("empresa"), pais:v("pais"), cidade:v("cidade"), email:v("email"), whatsapp:v("whatsapp"),
+    perfil:v("perfil"), divisoes:all("divs"), linhas:all("linhas"), produtos:all("produtos"), tipo:all("tipo"),
+    atuaIVD:v("ivd"), marcas:v("marcas"), equipamentos:v("equipamentos"), volume:v("volume"),
+    registro:v("registro"), cobertura:v("cobertura"), prazo:v("prazo"), obs:v("obs"), nota:v("nota") };
+  lead.score = scoreOf(lead);
+  state.leads.unshift(lead);
+  const saved = store(KEY_LEADS, state.leads);
+  $("#leads-count").textContent = state.leads.length;
+  const subj = (state.lang==="es"?"Lead feria":"Lead feira") + " - " + lead.empresa + " - " + t(SC[lead.score]);
+  const mail = "mailto:" + state.cfg.email + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(summary(lead));
+  $("#app").innerHTML = `<div class="done">
+    ${saved ? "" : `<p class="warn">${t("nostore")}</p>`}
+    <h2>${t("ok_title")}</h2>
+    <p style="margin:0">${t("ok_text")} <span class="score s-${lead.score}">${t(SC[lead.score])}</span></p>
+    <pre class="summary">${esc(summary(lead))}</pre>
+    <div class="toolbar">
+      ${div ? `<button type="button" class="btn primary" data-go="lead-${div}-${line}">${t("new_lead")}</button>` : ""}
+      <a class="btn${div?"":" primary"}" href="${esc(mail)}">${t("mail_btn")}</a>
+      ${div ? `<button type="button" class="btn ghost" data-go="cat-${div}-${line}">${t("back_cat")}</button>`
+            : `<button type="button" class="btn ghost" data-go="">${t("home_btn")}</button>`}
+    </div></div>`;
+  if (!div) { clearCart(); $("#dock").hidden = true; $("#dock-in").innerHTML = ""; }
+  window.scrollTo(0,0);
+}
+
+function summary(l){
+  return [
+    `${t("name")}: ${l.nome}${l.cargo?" ("+l.cargo+")":""}`,
+    `${t("company")}: ${l.empresa} - ${l.cidade?l.cidade+", ":""}${l.pais}`,
+    `${t("email")}: ${l.email}${l.whatsapp?" | "+t("whats")+": "+l.whatsapp:""}`,
+    `${t("profile")}: ${t("p_"+l.perfil)}`,
+    `${t("lines_int")}: ${(l.linhas||[]).map(x=>nm(lineOf(x))).join(", ")} (${(l.divisoes||[]).map(x=>nm(divOf(x))).join(", ")})`,
+    l.produtos?.length ? `${t("prods")}:\n` + l.produtos.map(c => { const p = prodOf(c); return "  - " + (p ? p.code+" · "+nm(p) : c); }).join("\n") : "",
+    l.tipo?.length ? `${t("type")}: ${l.tipo.map(x=>t("t_"+x)).join(", ")}` : "",
+    l.atuaIVD ? `${t("ivd")} ${l.atuaIVD==="sim"?t("yes"):t("no")}` : "",
+    l.marcas ? `${t("brands")}: ${l.marcas}` : "", l.equipamentos ? `${t("equip")}: ${l.equipamentos}` : "",
+    l.volume ? `${t("volume")}: ${t(l.volume)}` : "",
+    l.registro ? `${t("regq")} ${l.registro==="sim"?t("yes"):t("no")}` : "", l.cobertura ? `${t("cover")}: ${l.cobertura}` : "",
+    l.prazo ? `${t("when")} ${t(l.prazo)}` : "", l.obs ? `${t("obs")}: ${l.obs}` : "",
+    l.nota ? `${t("seller_note")}: ${l.nota}` : "",
+    `${l.evento} | ${(l.criadoEm||"").slice(0,16).replace("T"," ")}`
+  ].filter(Boolean).join("\n");
+}
+
+/* ---------- Leads ---------- */
+function viewLeads(){
+  const L = state.leads, c = s => L.filter(l => l.score===s).length;
+  const shown = state.filter==="all" ? L : L.filter(l => l.score===state.filter);
+  $("#app").innerHTML = `${storeWarn()}
+    <p class="eyebrow">${esc(state.cfg.evento)}</p>
+    <h1 style="font-size:36px;margin-top:4px">${t("l_title")}</h1>
+    <p class="lead-in">${t("l_lead")}</p>
+    <div class="kpis">
+      <div class="kpi"><b>${L.length}</b><span>${t("k_total")}</span></div>
+      <div class="kpi"><b class="s-quente">${c("quente")}</b><span>${t("k_hot")}</span></div>
+      <div class="kpi"><b class="s-morno">${c("morno")}</b><span>${t("k_warm")}</span></div>
+      <div class="kpi"><b class="s-frio">${c("frio")}</b><span>${t("k_cold")}</span></div>
+    </div>
+    <div class="toolbar">
+      <div class="seg" role="group">${[["all","all"],["quente","hot"],["morno","warm"],["frio","cold"]].map(([v,k]) =>
+        `<button type="button" data-filter="${v}" aria-pressed="${state.filter===v}">${t(k)}</button>`).join("")}</div>
+      <button type="button" class="btn primary" id="exp" style="margin-left:auto" ${L.length?"":"disabled"}>${t("export")}</button>
+    </div>
+    ${shown.length ? `<div class="tbl-wrap"><table><thead><tr>
+      <th>Score</th><th>${t("name")} / ${t("company")}</th><th>${t("country")}</th><th>${t("profile")}</th><th>${t("lines_int")}</th><th>${t("type")}</th><th>Data</th>
+    </tr></thead><tbody>${shown.map(l => `<tr data-id="${esc(l.id)}">
+      <td><span class="score s-${l.score}">${t(SC[l.score])}</span></td>
+      <td><div class="pname">${esc(l.nome)}</div><div style="color:var(--muted)">${esc(l.empresa)}</div></td>
+      <td>${esc(l.pais)}</td><td>${esc(t("p_"+l.perfil))}</td>
+      <td>${esc((l.linhas||[]).map(x=>nm(lineOf(x))||x).join(", "))}</td>
+      <td>${esc((l.tipo||[]).map(x=>t("t_"+x)).join(", "))}</td>
+      <td class="code">${esc((l.criadoEm||"").slice(0,16).replace("T"," "))}</td></tr>`).join("")}</tbody></table></div>`
+      : `<div class="empty">${t("l_empty")}</div>`}`;
+  document.querySelectorAll("[data-filter]").forEach(b => b.onclick = () => { state.filter = b.dataset.filter; viewLeads(); });
+  document.querySelectorAll("tbody tr[data-id]").forEach(tr => tr.onclick = () => showLead(tr.dataset.id));
+  if ($("#exp")) $("#exp").onclick = exportCSV;
+}
+function showLead(id){
+  const l = state.leads.find(x => x.id === id); if (!l) return;
+  const mail = "mailto:" + state.cfg.email + "?subject=" + encodeURIComponent("Lead - " + l.empresa) + "&body=" + encodeURIComponent(summary(l));
+  openSheet(`<span class="score s-${l.score}" style="align-self:flex-start">${t(SC[l.score])}</span><h2>${esc(l.empresa)}</h2>
+    <pre class="summary">${esc(summary(l))}</pre>
+    <div class="toolbar" style="margin-top:0"><a class="btn" href="${esc(mail)}">${t("mail_btn")}</a>
+    <button type="button" class="btn ghost" id="del">${t("del")}</button></div>`);
+  let armed = false;
+  $("#del").onclick = () => {
+    if (!armed){ armed = true; $("#del").textContent = t("del_confirm"); return; }
+    state.leads = state.leads.filter(x => x.id !== id); store(KEY_LEADS, state.leads); closeSheet(); render();
+  };
+}
+function exportCSV(){
+  const cols = ["criadoEm","score","origem","vendedor","nome","cargo","empresa","pais","cidade","email","whatsapp","perfil","divisoes","linhas","produtos","tipo","atuaIVD","marcas","equipamentos","volume","registro","cobertura","prazo","obs","nota","idioma","evento"];
+  const cell = x => '"' + String(Array.isArray(x) ? x.join("; ") : (x ?? "")).replace(/"/g,'""') + '"';
+  const csv = "\ufeff" + cols.join(";") + "\n" + state.leads.map(l => cols.map(c => cell(l[c])).join(";")).join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
+  a.download = "leads-" + state.cfg.evento.replace(/[^\w-]+/g,"-").toLowerCase() + "-" + new Date().toISOString().slice(0,10) + ".csv";
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
+/* ---------- Ajustes ---------- */
+function viewCfg(){
+  const c = state.cfg;
+  const lineInputs = DIVS.flatMap(d => linesOf(d.id).map(l => {
+    const k = d.id+"-"+l.id;
+    return `<label class="f">${esc(nm(d))} · ${esc(nm(l))}<input name="link_${k}" value="${esc((c.links||{})[k]||"")}" placeholder="https://"></label>`;
+  })).join("");
+  $("#app").innerHTML = `${storeWarn()}
+    <h1 style="font-size:34px">${t("cfg_title")}</h1><p class="lead-in">${t("cfg_lead")}</p>
+    <form id="cf" autocomplete="off">
+      <fieldset>
+        <label class="f">${t("c_evento")}<input name="evento" value="${esc(c.evento)}"></label>
+        <label class="f">${t("c_email")}<input name="email" type="email" value="${esc(c.email)}"></label>
+        <label class="f">${t("c_wa")}<input name="whatsapp" id="cfg-wa" inputmode="tel" value="${esc(c.whatsapp||"")}" placeholder="5531999998888"><small class="hintwa" id="cfg-wa-p"></small></label>
+        <label class="f">${t("c_resp")}<input name="responsavel" value="${esc(c.responsavel)}"></label>
+        <label class="f">${t("c_prazo")}<input name="prazo" value="${esc(c.prazo)}"></label>
+        <label class="f full">${t("c_cat")}<input name="linkCatalogo" value="${esc(c.linkCatalogo)}" placeholder="https://"></label>
+        <label class="f full">${t("c_form")}<input name="linkFormulario" value="${esc(c.linkFormulario)}" placeholder="https://"></label>
+      </fieldset>
+      <details class="fold"><summary>${t("c_lines")}</summary><fieldset>${lineInputs}</fieldset></details>
+      <div class="toolbar" style="margin-top:0"><button class="btn primary" type="submit">${t("save")}</button><p class="ok" id="cfg-ok" hidden>${t("saved")}</p></div>
+    </form>`;
+  $("#dock-in").innerHTML = `<button type="button" class="btn primary" id="cfg-save">${t("save")}</button><span class="ok" id="cfg-ok2" hidden>${t("saved")}</span>`;
+  $("#dock").hidden = false;
+  $("#cfg-save").onclick = () => $("#cf").requestSubmit();
+  const prev = () => { const n = normWa($("#cfg-wa").value); $("#cfg-wa-p").textContent = n ? "wa.me/" + n : t("c_wa_hint"); };
+  $("#cfg-wa").addEventListener("input", prev); prev();
+  $("#cf").addEventListener("submit", e => {
+    e.preventDefault();
+    const fd = new FormData($("#cf")), v = n => String(fd.get(n) || "").trim(), links = {};
+    DIVS.forEach(d => LINES.forEach(l => { const k = d.id+"-"+l.id, x = v("link_"+k); if (x) links[k] = x; }));
+    state.cfg = { evento:v("evento")||DEFAULTS.evento, email:v("email")||DEFAULTS.email, whatsapp:normWa(v("whatsapp")), responsavel:v("responsavel"), prazo:v("prazo"),
+      linkCatalogo:v("linkCatalogo"), linkFormulario:v("linkFormulario"), links };
+    store(KEY_CFG, state.cfg);
+    $("#cfg-ok").hidden = false;
+    if ($("#cfg-ok2")) $("#cfg-ok2").hidden = false;
+  });
+}
+
+/* ---------- Voltar deslizando para a direita ---------- */
+function backRoute(){
+  const p = state.route.split("-");
+  if (state.route === "" ) return null;
+  if (state.route === "leads" || state.route === "cfg" || state.route === "divs" || state.route === "cart") return "";
+  if (state.route === "lead-cart") return "cart";
+  if (p[0] === "lead") return "cat-" + p[1] + "-" + p[2];
+  if (p[0] === "cat")  return p[1] === "all" ? "lin-" + p[2] : "div-" + p[1];
+  if (p[0] === "lin")  return "";
+  if (p[0] === "div")  return "divs";
+  return null;
+}
+let swX = 0, swY = 0, swT = 0, swOK = false, swPanel = -1;
+document.addEventListener("touchstart", e => {
+  swOK = false;
+  if (e.touches.length !== 1) return;
+  if (e.target.closest("input,textarea,select,#overlay")) return;
+  const tw = e.target.closest(".tbl-wrap");            // tabela rolada para o lado: deixa a tabela voltar primeiro
+  if (tw && tw.scrollLeft > 2) return;
+  const p = e.touches[0], sl = $("#slider");
+  swX = p.clientX; swY = p.clientY; swT = Date.now(); swOK = true;
+  swPanel = sl ? Math.round(sl.scrollLeft / sl.clientWidth) : -1;
+}, {passive:true});
+document.addEventListener("touchend", e => {
+  if (!swOK) return; swOK = false;
+  if (!$("#overlay").hidden) return;
+  const p = e.changedTouches[0], dx = p.clientX - swX, dy = p.clientY - swY;
+  if (dx < 60 || Math.abs(dx) < Math.abs(dy) * 1.5 || Date.now() - swT > 900) return;
+  const sl = $("#slider");
+  if (sl && document.body.contains(sl)) {             // na home: volta do painel de divisões para "Sobre a Bioclin"
+    if (swPanel >= 1) sl.scrollTo({left: 0, behavior: "smooth"});
+    return;
+  }
+  const r = backRoute();
+  if (r !== null) go(r);
+}, {passive:true});
+
+/* ---------- Eventos ---------- */
+document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (g) { e.preventDefault(); go(g.dataset.go); } });
+$("#home-btn").onclick = () => go("");
+$("#leads-btn").onclick = () => go("leads");
+$("#cfg-btn").onclick = () => go("cfg");
+document.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { state.lang = b.dataset.lang; render(); });
+
+/* ---------- Rastreio vindo do QR ---------- */
+state.qr = { feira:QS.get("feira")||"", vend:QS.get("vend")||"", div:QS.get("div")||"", linha:QS.get("linha")||"" };
+if (QS.get("lang") === "es") state.lang = "es";
+if (state.qr.feira) state.cfg.evento = state.qr.feira;          // só nesta sessão; não grava sobre os Ajustes
+if (lineOf(state.qr.linha)) state.route = "cat-" + (divOf(state.qr.div) ? state.qr.div : "all") + "-" + state.qr.linha;
+else if (divOf(state.qr.div) && state.qr.div !== "all") state.route = "div-" + state.qr.div;
+render();
+</script>
+</body>
+</html>
