@@ -1474,11 +1474,11 @@ const T = {
     pick_div:"Escolha a divisão", pick_lead:"Esta linha atende as duas divisões. Escolha para ver os produtos certos.", both_divs:"Ver as duas divisões juntas", sel_prods:"Produtos desta proposta", back_cart:"Voltar à proposta", home_btn:"Voltar ao início",
     c_wa:"WhatsApp comercial", c_wa_hint:"Sem o código do país, assumimos o Brasil (+55).",
     q_title:"Seus dados", q_lead:"Preencha o essencial e envie. O restante a gente completa no follow-up.",
-    q_contact:"Informe WhatsApp ou e-mail", q_req:"Faltam dados: nome, empresa, país, perfil, um contato e o consentimento.",
+    q_contact:"Informe WhatsApp ou e-mail", q_auto:"Seu contato chega junto com a mensagem, pelo WhatsApp ou e-mail que você usar para enviar.", q_req_c:"Faltam dados: nome, empresa, país, perfil e o consentimento.", q_req:"Faltam dados: nome, empresa, país, perfil, um contato e o consentimento.",
     wa_send:"Enviar por WhatsApp", mail_send:"Enviar por e-mail", qr_client:"Cliente envia do celular dele",
     qr_client_t:"O cliente aponta a câmera: abre o WhatsApp dele já com a lista e os dados escritos. Você fica com o número dele.",
     full_form:"Cadastro completo (qualificação)", no_wa:"Digite o número aqui. Ele fica salvo neste aparelho e vale para os próximos envios.",
-    sent_title:"Pedido montado", sent_text:"Confira se a mensagem abriu. Se não abrir, use o botão abaixo.",
+    sent_title:"Pedido montado", sent_text:"A mensagem abriu pronta no aplicativo, mas ela só chega à Bioclin depois que você tocar em ENVIAR lá. Se não abriu, use o botão abaixo.",
     open_wa:"Abrir WhatsApp", open_mail:"Abrir e-mail", wa_head:"PROPOSTA BIOCLIN", m_profile:"Perfil", m_when:"Prazo",
     l_title:"Leads da feira", l_lead:"Cadastros salvos neste tablet. Exporte o CSV ao fim de cada dia como cópia de segurança.",
     k_total:"Total", k_hot:"Quentes", k_warm:"Mornos", k_cold:"Frios",
@@ -1533,11 +1533,11 @@ const T = {
     pick_div:"Elija la división", pick_lead:"Esta línea atiende las dos divisiones. Elija para ver los productos correctos.", both_divs:"Ver las dos divisiones juntas", sel_prods:"Productos de esta propuesta", back_cart:"Volver a la propuesta", home_btn:"Volver al inicio",
     c_wa:"WhatsApp comercial", c_wa_hint:"Sin el código de país, asumimos Brasil (+55).",
     q_title:"Sus datos", q_lead:"Complete lo esencial y envíe. El resto lo completamos en el seguimiento.",
-    q_contact:"Indique WhatsApp o correo", q_req:"Faltan datos: nombre, empresa, país, perfil, un contacto y el consentimiento.",
+    q_contact:"Indique WhatsApp o correo", q_auto:"Su contacto llega junto con el mensaje, por el WhatsApp o correo que usted use para enviar.", q_req_c:"Faltan datos: nombre, empresa, país, perfil y el consentimiento.", q_req:"Faltan datos: nombre, empresa, país, perfil, un contacto y el consentimiento.",
     wa_send:"Enviar por WhatsApp", mail_send:"Enviar por correo", qr_client:"El cliente envía desde su móvil",
     qr_client_t:"El cliente apunta la cámara: se abre su WhatsApp con la lista y los datos ya escritos. Usted se queda con su número.",
     full_form:"Registro completo (calificación)", no_wa:"Escriba el número aquí. Queda guardado en este aparato y vale para los próximos envíos.",
-    sent_title:"Pedido armado", sent_text:"Verifique si el mensaje se abrió. Si no, use el botón de abajo.",
+    sent_title:"Pedido armado", sent_text:"El mensaje se abrió listo en la aplicación, pero solo llega a Bioclin después de que usted toque ENVIAR allí. Si no se abrió, use el botón de abajo.",
     open_wa:"Abrir WhatsApp", open_mail:"Abrir correo", wa_head:"PROPUESTA BIOCLIN", m_profile:"Perfil", m_when:"Plazo",
     l_title:"Leads de la feria", l_lead:"Registros guardados en esta tableta. Exporte el CSV al final de cada día como respaldo.",
     k_total:"Total", k_hot:"Calientes", k_warm:"Tibios", k_cold:"Fríos",
@@ -1564,8 +1564,19 @@ const KEY_CFG = "bioclin_feira_cfg", KEY_LEADS = "bioclin_feira_leads", KEY_CART
 let storageOK = true;
 function load(k, fb){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch(e){ storageOK = false; return fb; } }
 function store(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ storageOK = false; return false; } }
+/* um ajuste salvo em branco não pode apagar o valor que já vem no arquivo */
+function mergeCfg(base, saved){
+  const out = Object.assign({}, base);
+  Object.keys(saved || {}).forEach(k => {
+    const v = saved[k];
+    if (v === "" || v == null) return;
+    if (typeof v === "object" && !Array.isArray(v) && !Object.keys(v).length) return;
+    out[k] = v;
+  });
+  return out;
+}
 const state = { lang:"pt", route:"", filter:"all",
-  cfg: Object.assign({}, DEFAULTS, load(KEY_CFG, {})),
+  cfg: mergeCfg(DEFAULTS, load(KEY_CFG, {})),
   leads: load(KEY_LEADS, []), cart: load(KEY_CART, []) };
 const $ = s => document.querySelector(s);
 /* parâmetros do QR: modo, feira, vendedor, divisão, linha, idioma */
@@ -1858,7 +1869,7 @@ function quickData(){
   return { nome:v("nome"), empresa:v("empresa"), pais:v("pais"), whatsapp:v("whatsapp"), email:v("email"),
            perfil:v("perfil"), prazo:v("prazo"), consent: !!fd.get("consent") };
 }
-const quickOK = d => d.nome && d.empresa && d.pais && d.perfil && (d.whatsapp || d.email) && d.consent;
+const quickOK = d => d.nome && d.empresa && d.pais && d.perfil && d.consent && (CLIENTE || d.whatsapp || d.email);
 
 function saveQuick(d, via){
   const items = cartProds();
@@ -1922,15 +1933,15 @@ function viewCart(){
       <label class="f"><span class="lbl">${t("name")} <b class="req">*</b></span><input name="nome"></label>
       <label class="f"><span class="lbl">${t("company")} <b class="req">*</b></span><input name="empresa"></label>
       <label class="f"><span class="lbl">${t("country")} <b class="req">*</b></span><input name="pais"></label>
-      <label class="f">${t("whats")}<input name="whatsapp" inputmode="tel" placeholder="+__"></label>
-      <label class="f">${t("email")}<input name="email" type="email"></label>
+      ${CLIENTE ? "" : `<label class="f">${t("whats")}<input name="whatsapp" inputmode="tel" placeholder="+__"></label>
+      <label class="f">${t("email")}<input name="email" type="email"></label>`}
       <label class="f"><span class="lbl">${t("m_profile")} <b class="req">*</b></span>
         <select name="perfil"><option value="">${t("select")}</option>
         ${["dist","lab","hosp","vet","gov","ind","other"].map(k=>`<option value="${k}">${t("p_"+k)}</option>`).join("")}</select></label>
       <div class="full"><div class="grp-label">${t("when")}</div>${chips("prazo", [["w1",t("w1")],["w2",t("w2")],["w3",t("w3")]], [], "radio")}</div>
       <label class="consent full"><input type="checkbox" name="consent"> <span>${t("consent")}</span></label>
-      <p class="note full" style="margin:0">${t("q_contact")}</p>
-      <p class="err full" id="qerr" hidden>${t("q_req")}</p>
+      <p class="note full" style="margin:0">${CLIENTE ? t("q_auto") : t("q_contact")}</p>
+      <p class="err full" id="qerr" hidden>${CLIENTE ? t("q_req_c") : t("q_req")}</p>
     </fieldset></form>`
       : `<div class="empty">${t("cart_empty")}</div>`}`;
   if (!items.length) return;
@@ -1943,13 +1954,13 @@ function viewCart(){
     clearCart(); go("");
   };
   $("#dock-in").innerHTML = `
-    <a class="btn primary" id="b-wa" href="#" target="_blank" rel="noopener">${t("wa_send")}</a>
+    ${(wa || !CLIENTE) ? `<a class="btn primary" id="b-wa" href="#" target="_blank" rel="noopener">${t("wa_send")}</a>` : ""}
     <a class="btn${wa?"":" primary"}" id="b-ml" href="#" target="_blank" rel="noopener">${t("mail_send")}</a>
     ${CLIENTE ? "" : `<button type="button" class="btn ghost" id="b-qrc">${t("qr_client")}</button>`}`;
   $("#dock").hidden = false;
   const sync = () => {
     const d = quickData();
-    $("#b-wa").href = waURL(d) || "#";
+    if ($("#b-wa")) $("#b-wa").href = waURL(d) || "#";
     $("#b-ml").href = mailURL(d);
   };
   $("#qf").addEventListener("input", sync);
@@ -1962,7 +1973,8 @@ function viewCart(){
     const lead = saveQuick(d, via);
     setTimeout(() => sentView(lead, a.href, via), 60);   // deixa o link abrir antes de trocar a tela
   });
-  guard($("#b-wa"), "wa"); guard($("#b-ml"), "mail");
+  if ($("#b-wa")) guard($("#b-wa"), "wa");
+  guard($("#b-ml"), "mail");
   if ($("#b-qrc")) $("#b-qrc").onclick = () => {
     const d = quickData();
     openSheet(`<p class="eyebrow">${t("cart_title")} · ${items.length}</p><h2>${t("qr_client")}</h2>
