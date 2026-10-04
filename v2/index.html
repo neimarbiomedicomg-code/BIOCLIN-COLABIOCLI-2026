@@ -473,6 +473,20 @@ body[data-line] .top{border-bottom-color:var(--accent)!important}
 .ok-direct .ok-ico{width:56px;height:56px;border-radius:50%;background:#e6f4ea;color:#1e7a3c;display:flex;align-items:center;justify-content:center}
 .ok-direct .ok-ico svg{width:30px;height:30px}
 .reg-note{font-size:12px;margin-top:14px}
+
+/* ================= Barra de envio (aparece ao marcar) ================= */
+.sendbar{display:flex;gap:8px;align-items:stretch;flex:1 1 100%;width:100%}
+.sendbar.pop{animation:sbpop .35s ease}
+@keyframes sbpop{0%{transform:translateY(14px);opacity:.3}60%{transform:translateY(-3px)}}
+.send-go{flex:1;display:flex;align-items:center;gap:12px;border:0;border-radius:14px;padding:10px 16px;min-height:60px;
+  background:#1e7a3c;color:#fff;text-align:left;box-shadow:0 6px 18px rgba(30,122,60,.28)}
+.send-go .sg-n{min-width:34px;height:34px;border-radius:17px;background:#fff;color:#1e7a3c;font:800 16px/34px var(--f-body);text-align:center;padding:0 6px}
+.send-go .sg-t{display:flex;flex-direction:column;flex:1;line-height:1.2}
+.send-go b{font-size:17px}
+.send-go small{font-size:12.5px;opacity:.9}
+.send-go .sg-arrow{font-size:24px;font-weight:700}
+.sg-see{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:0 14px;font-weight:600;color:var(--ink);font-size:14px}
+@media(max-width:700px){ .dock{background:rgba(255,255,255,.96);backdrop-filter:blur(6px)} main{padding-bottom:calc(200px + env(safe-area-inset-bottom,0px))} }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -2054,13 +2068,13 @@ function toggleLine(div, line){
     const inside = new Set(lineProds(div, line).map(p => p.id));
     state.cart = state.cart.filter(x => !inside.has(x)).concat([k]);
   }
-  store(KEY_CART, state.cart); refreshDock(); tabs(true);
+  store(KEY_CART, state.cart); refreshDock(true); tabs(true);
 }
 const cartProds = () => state.cart.map(prodOf).filter(Boolean);
 function toggleCart(c){
   const pp = prodOf(c); if (pp && covered(pp)) return;
   state.cart = inCart(c) ? state.cart.filter(x => x !== c) : state.cart.concat([c]);
-  store(KEY_CART, state.cart); paintAdd(c); refreshDock(); tabs(true);
+  store(KEY_CART, state.cart); paintAdd(c); refreshDock(true); tabs(true);
 }
 function clearCart(){ state.cart = []; store(KEY_CART, state.cart); }
 function addBtn(p){
@@ -2083,17 +2097,24 @@ function tabs(pop){
   const bd = $("#tab-badge"); bd.textContent = state.cart.length; bd.hidden = !state.cart.length;
   if (pop) { bd.classList.remove("pop"); void bd.offsetWidth; bd.classList.add("pop"); }
 }
-function cartDock(){
-  if (!state.cart.length || state.route === "cart" || state.route === "lead-cart" || state.route.startsWith("enviar-") || isPhone()) return;
-  const q = $("#b-qr2"); if (q) q.classList.remove("primary");   // a proposta passa a ser a ação principal
-  $("#dock-in").insertAdjacentHTML("beforeend",
-    `<button type="button" class="btn primary cart-go" data-go="cart">${t("cart_view")} <span class="count">${state.cart.length}</span></button>`);
+function cartDock(pop){
+  if (!state.cart.length || state.route === "cart" || state.route === "lead-cart" || state.route.startsWith("enviar-")) return;
+  const q = $("#b-qr2"); if (q) q.classList.remove("primary");   // o envio passa a ser a ação principal
+  const q1 = $("#b-qr1"); if (q1) q1.classList.remove("primary");
+  const n = state.cart.length;
+  $("#dock-in").insertAdjacentHTML("afterbegin",
+    `<div class="sendbar${pop ? " pop" : ""}"><button type="button" class="send-go" data-go="enviar-1">
+       <span class="sg-n">${n}</span>
+       <span class="sg-t"><b>${t("sb_send")}</b><small>${t(n === 1 ? "sb_one" : "sb_many").replace("{n}", n)}</small></span>
+       <span class="sg-arrow" aria-hidden="true">→</span></button>
+     <button type="button" class="sg-see" data-go="cart">${t("sb_see")}</button></div>`);
   $("#dock").hidden = false;
 }
-function refreshDock(){
-  const b = $("#dock-in .cart-go"); if (b) b.remove();
+function refreshDock(pop){
+  const b = $("#dock-in .sendbar"); if (b) b.remove();
   const q = $("#b-qr2"); if (q && !state.cart.length) q.classList.add("primary");
-  cartDock();
+  const q1 = $("#b-qr1"); if (q1 && !state.cart.length) q1.classList.add("primary");
+  cartDock(pop);
   if (!$("#dock-in").children.length) $("#dock").hidden = true;
 }
 
@@ -3098,6 +3119,9 @@ Object.assign(T.es, {"c_endpoint": "Envío directo (V2): URL de Google Apps Scri
 Object.assign(T.pt, {"sent_title": "Obrigado! Confira o envio", "sent_text": "Se você já tocou em ENVIAR no seu e-mail, sua lista está com a Bioclin. Se o e-mail não abriu, use o botão abaixo."});
 Object.assign(T.en, {"sent_title": "Thank you! Check it was sent", "sent_text": "If you already tapped SEND in your email app, your list is with Bioclin. If the email did not open, use the button below."});
 Object.assign(T.es, {"sent_title": "¡Gracias! Confirme el envío", "sent_text": "Si ya tocó ENVIAR en su correo, su lista está con Bioclin. Si el correo no se abrió, use el botón de abajo."});
+Object.assign(T.pt, {"sb_send": "Enviar meu interesse", "sb_one": "1 item selecionado · toque para enviar", "sb_many": "{n} itens selecionados · toque para enviar", "sb_see": "Ver lista"});
+Object.assign(T.en, {"sb_send": "Send my interest", "sb_one": "1 item selected · tap to send", "sb_many": "{n} items selected · tap to send", "sb_see": "View list"});
+Object.assign(T.es, {"sb_send": "Enviar mi interés", "sb_one": "1 ítem seleccionado · toque para enviar", "sb_many": "{n} ítems seleccionados · toque para enviar", "sb_see": "Ver lista"});
 /* ---------- Rastreio vindo do QR ---------- */
 state.qr = { feira:QS.get("feira")||"", vend:QS.get("vend")||"", div:QS.get("div")||"", linha:QS.get("linha")||"" };
 if (["es","en","pt"].includes(QS.get("lang"))) state.lang = QS.get("lang");
