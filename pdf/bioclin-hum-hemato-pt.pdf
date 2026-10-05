@@ -2,7 +2,7 @@
 %“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
 <<
-/F1 2 0 R /F2 4 0 R
+/F1 2 0 R /F2 4 0 R /F3 5 0 R
 >>
 endobj
 2 0 obj
@@ -25,7 +25,12 @@ endobj
 endobj
 5 0 obj
 <<
-/Contents 9 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 8 0 R /Resources <<
+/BaseFont /Courier /Encoding /WinAnsiEncoding /Name /F3 /Subtype /Type1 /Type /Font
+>>
+endobj
+6 0 obj
+<<
+/Contents 10 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 9 0 R /Resources <<
 /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ] /XObject <<
 /FormXob.e85fa36b59e2cdbf071e5c543a4fd0bb 3 0 R
 >>
@@ -35,51 +40,52 @@ endobj
   /Type /Page
 >>
 endobj
-6 0 obj
-<<
-/PageMode /UseNone /Pages 8 0 R /Type /Catalog
->>
-endobj
 7 0 obj
 <<
-/Author (Bioclin) /CreationDate (D:20261004130056-03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261004130056-03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
-  /Subject (\(unspecified\)) /Title (Bioclin Cat\341logo de produtos - Divis\343o Humana \267 Hematologia) /Trapped /False
+/PageMode /UseNone /Pages 9 0 R /Type /Catalog
 >>
 endobj
 8 0 obj
 <<
-/Count 1 /Kids [ 5 0 R ] /Type /Pages
+/Author (Bioclin) /CreationDate (D:20261005002358-03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261005002358-03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (Bioclin Cat\341logo de produtos - Divis\343o Humana \267 Hematologia) /Trapped /False
 >>
 endobj
 9 0 obj
 <<
-/Filter [ /ASCII85Decode /FlateDecode ] /Length 754
+/Count 1 /Kids [ 6 0 R ] /Type /Pages
+>>
+endobj
+10 0 obj
+<<
+/Filter [ /ASCII85Decode /FlateDecode ] /Length 1404
 >>
 stream
-GasIe9lncK%))O>kZBlu]%ZW77%oj2Tg5Sc399)&FPM_dXcq2JO4J#s6dd-LG`oJ1pS@O7!l5\4pSn=?Qc$p*!D1Aq5T2N@TA`//4n'1#)QhLM=B`'YGR[iNTjRu4&5YAQ>UMTnO$iXlQIpF<09e%_BOk,0F5a&P'pgBA]G>&bB/.$DOAu&V8g7mWTI+0^L$p*>63C"d5D9^5XX32H(l?P*ak6`5?7\"iB$]:eYrPR)DN9eBGn*Fa,V&tA&Pr[0OEY[9^0&XEVFA.W:cE>X`;4HgQS=WS_--ZI?1MJ?iSq*mqI4l#d<*>WE_9QKK)?,Lirk&cED_QlYegK$jfEV=E^#TnB_T&S7j'rED7(Cph8D`d[AsLtNs/L&<A5.HdWkqCdrr]\AMKEh=hH?@==r5JX4Ui@9NY"SN99-:r<#BMi+od<QBL.(@N9^S<>,>j58)>oF#"Ip3LB'/8Yhr=c7XTQhTV3\?fC"be`iFL*UL]-8km]%cpU!#dQpDN&HkVkJa3cT'FA'*<^/VrgIo%SUgGb5mK@@N.VKd:`7Rj\ni253L<M3Mc+qR"PS_->/#BNa?Lse_Jbehc*@&Dj/!<$$mhcEj4\H9V.BDb-2BGoT"`trf^5;lu[eSfp.1+$`Y_g)/<jCL#g<OK1d?FT7s7CbRQ;'S`let7V4(p"F0,Er\W$A391=GANnb4Y'YC\#-kag=!&cLDl]LmF:4cP(0Bm4A?/]OW,rK>+MH1[Oo)^U7*&,dq0g]~>endstream
+GauI79lo#Z&;KZOME[2&0qN=.ltKTa[^-ocf.m/Bi%fg*8g2:gOR2uDoLL)-7R85u2.`,NRF1n,pS1b6"r'9Qs#Z2@IMouP/Ha"$1^>@aK[Dl+1[9D.Ntk&S+c=BH'<S?u+?<<CC(#U#6j/b5Fa@,uBbp`4:.T'Jg^-,@2WW??A534BW[V8oan^lj-?,1B*d`PHrr[p1(2*k>18Ttb%sL0+'R]9o<>eDfedQ"aMN^<)b./f\eQse2oX;B<q;uY<G&qnsD;ual,#!%cL0DGG'/5<;J*kfs+k\VVUbE283D4"SFh3/Zf)aYp?_S8FM\PS<YtJ>AqEBko3lND-HNg0?0RE,_M""`(2e=j(J=?nQ$nCCu2eRtrl)b?p2ag1gFmeWG>t3:V*PuRO@%+5==p]425=#oOZ-15,AWq5tI\&slF;ZB8R`8m$<ErNlPf/L/i(/N$-9i[]V'WIkM@,/:7el%o5*H%K1<9@4YASWjBh&&mq_rHnHM]N7<;[7#Im+:u%hH$CWs_d)VcGR-Z";?]N[?<r=YI_T:7P7dc?%M4Vpe\EbGkLpn@Ai<G+"M<:[BF$1#seA(_4a:+Zcq5%-T84dGPjj`0(MQ@DFF)+j=;c7>=0[pP=Ue,r-AtBDe]`GV$4h7>pe[iWDgTRO>gSnOLFkl1sP/jOIX&rukXFZPTl.\@X"@bZ$HScWRabP7"arQV&eu7k57^N)jh^iWUfIBYIl(5I!>_^7]<Nffh;&O_dCD.#8I>>ZhQ\25P?/CKW+(g/a.KgW],H,/7?u#P[-6/fT^6-=>SL<i]IPk[J+HTlQR`cBK3C']O?0GN>'M%_%mCg_.X*,r3U&-un9K[H^9q(:c%gdK@mI,UHZO0i<_SFdfiD+!'+1k6o3PReg[Pc:.d%/6[F+2h7u@"DT027W?[S=+ZFbl:S94>GBqpXc>!iW(OH3X0#9D;&HM%+/+%!/epL/l5@E$2dH_Jk,'ZF[bTdsmt\IL%==3<CVWZlpNKGtYb0a9]`=!rr*90oE!O]A.hdlLCPgSW5P)+62'K/7Htr8YpZN&q%t7of!KgX"BHVNcFQKbR4,.p0NoU:f*hAU#[2%j9SD377h\nE2!8I.ha?>RR<YC$iK0\=&2]_d6P%u?83sd=_\26+ael9OjeWjH6gna092eAFWWg6ftESGY7k@kSq8$qZ0[gm,a1c1QIes0S-B)Tba)`IZGf?or!2`IKTD@eUarOH-KQ9P'#fk&90]:QDO\)DmYak4-'0oXRMk2Jj`>oJ`52dA4Vg&G-hI`:2?4^s*+W(]lm,\DRo6N"`,O3%6)-7Y^IGlP(i+8T'*IY\kB*V,!IOL,6[GZYGqF"i9&]-5sCAH\';"'S_1n7Xa'%a9dC2d/@?o@&bCn&An2M32$XXUXp:!BO`Vf)~>endstream
 endobj
 xref
-0 10
+0 11
 0000000000 65535 f 
 0000000061 00000 n 
-0000000102 00000 n 
-0000000209 00000 n 
-0000093343 00000 n 
-0000093455 00000 n 
-0000093721 00000 n 
-0000093789 00000 n 
-0000094118 00000 n 
-0000094177 00000 n 
+0000000112 00000 n 
+0000000219 00000 n 
+0000093353 00000 n 
+0000093465 00000 n 
+0000093570 00000 n 
+0000093837 00000 n 
+0000093905 00000 n 
+0000094234 00000 n 
+0000094293 00000 n 
 trailer
 <<
 /ID 
-[<6ae72de3ead4f21b88ad274402ecb2f8><6ae72de3ead4f21b88ad274402ecb2f8>]
+[<779cd70d64832328cb96e6673a8b203e><779cd70d64832328cb96e6673a8b203e>]
 % ReportLab generated PDF document -- digest (opensource)
 
-/Info 7 0 R
-/Root 6 0 R
-/Size 10
+/Info 8 0 R
+/Root 7 0 R
+/Size 11
 >>
 startxref
-95021
+95789
 %%EOF
