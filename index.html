@@ -466,6 +466,28 @@ body[data-line] .top{border-bottom-color:var(--accent)!important}
 .keep span{font-size:14px;color:var(--muted)}
 .keep-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px}
 .keep-row code{flex:1 1 220px;font-size:12px;word-break:break-all;color:var(--accent)}
+
+/* ================= V2: envio direto ================= */
+.wz-alt{display:block;text-align:center;font-size:14px;color:var(--muted);text-decoration:underline;padding:6px}
+.ok-direct{text-align:left}
+.ok-direct .ok-ico{width:56px;height:56px;border-radius:50%;background:#e6f4ea;color:#1e7a3c;display:flex;align-items:center;justify-content:center}
+.ok-direct .ok-ico svg{width:30px;height:30px}
+.reg-note{font-size:12px;margin-top:14px}
+
+/* ================= Barra de envio (aparece ao marcar) ================= */
+.sendbar{display:flex;gap:8px;align-items:stretch;flex:1 1 100%;width:100%}
+.sendbar.pop{animation:sbpop .35s ease}
+@keyframes sbpop{0%{transform:translateY(14px);opacity:.3}60%{transform:translateY(-3px)}}
+.send-go{flex:1;display:flex;align-items:center;gap:12px;border:0;border-radius:14px;padding:10px 16px;min-height:60px;
+  background:#1e7a3c;color:#fff;text-align:left;box-shadow:0 6px 18px rgba(30,122,60,.28)}
+.send-go .sg-n{min-width:34px;height:34px;border-radius:17px;background:#fff;color:#1e7a3c;font:800 16px/34px var(--f-body);text-align:center;padding:0 6px}
+.send-go .sg-t{display:flex;flex-direction:column;flex:1;line-height:1.2}
+.send-go b{font-size:17px}
+.send-go small{font-size:12.5px;opacity:.9}
+.send-go .sg-arrow{font-size:24px;font-weight:700}
+.sg-see{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:0 14px;font-weight:600;color:var(--ink);font-size:14px}
+@media(max-width:700px){ .dock{background:rgba(255,255,255,.96);backdrop-filter:blur(6px)} main{padding-bottom:calc(200px + env(safe-area-inset-bottom,0px))} }
+.vtag{font:700 11px/1 var(--f-body);background:#1e7a3c;color:#fff;border-radius:6px;padding:4px 6px;letter-spacing:.04em}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -1751,7 +1773,8 @@ const DEFAULTS = {
   prazo: "2 dias úteis",
   linkCatalogo: "",          // link do PDF do catálogo completo (Google Drive, site da Bioclin etc.)
   linkFormulario: "",        // opcional: link de um Google Forms. Vazio = QR 2 abre e-mail pré-preenchido
-  links: {}                  // opcional: link do PDF por linha, ex.: {"hum-bioq":"https://..."}
+  links: {},                 // opcional: link do PDF por linha, ex.: {"hum-bioq":"https://..."}
+  endpoint: "https://script.google.com/macros/s/AKfycbyi8nvWUEq9SIcR9e8bbnk8H2HYsa3NpcqRxYcFlWnNUdYm7yT75wbXQELQSFdVhgd6wQ/exec"   // V2: URL do Google Apps Script (envio direto, sem depender do app de e-mail do visitante)
 };
 
 /* ================= TEXTOS ================= */
@@ -2046,13 +2069,13 @@ function toggleLine(div, line){
     const inside = new Set(lineProds(div, line).map(p => p.id));
     state.cart = state.cart.filter(x => !inside.has(x)).concat([k]);
   }
-  store(KEY_CART, state.cart); refreshDock(); tabs(true);
+  store(KEY_CART, state.cart); refreshDock(true); tabs(true);
 }
 const cartProds = () => state.cart.map(prodOf).filter(Boolean);
 function toggleCart(c){
   const pp = prodOf(c); if (pp && covered(pp)) return;
   state.cart = inCart(c) ? state.cart.filter(x => x !== c) : state.cart.concat([c]);
-  store(KEY_CART, state.cart); paintAdd(c); refreshDock(); tabs(true);
+  store(KEY_CART, state.cart); paintAdd(c); refreshDock(true); tabs(true);
 }
 function clearCart(){ state.cart = []; store(KEY_CART, state.cart); }
 function addBtn(p){
@@ -2075,17 +2098,24 @@ function tabs(pop){
   const bd = $("#tab-badge"); bd.textContent = state.cart.length; bd.hidden = !state.cart.length;
   if (pop) { bd.classList.remove("pop"); void bd.offsetWidth; bd.classList.add("pop"); }
 }
-function cartDock(){
-  if (!state.cart.length || state.route === "cart" || state.route === "lead-cart" || state.route.startsWith("enviar-") || isPhone()) return;
-  const q = $("#b-qr2"); if (q) q.classList.remove("primary");   // a proposta passa a ser a ação principal
-  $("#dock-in").insertAdjacentHTML("beforeend",
-    `<button type="button" class="btn primary cart-go" data-go="cart">${t("cart_view")} <span class="count">${state.cart.length}</span></button>`);
+function cartDock(pop){
+  if (!state.cart.length || state.route === "cart" || state.route === "lead-cart" || state.route.startsWith("enviar-")) return;
+  const q = $("#b-qr2"); if (q) q.classList.remove("primary");   // o envio passa a ser a ação principal
+  const q1 = $("#b-qr1"); if (q1) q1.classList.remove("primary");
+  const n = state.cart.length;
+  $("#dock-in").insertAdjacentHTML("afterbegin",
+    `<div class="sendbar${pop ? " pop" : ""}"><button type="button" class="send-go" data-go="enviar-1">
+       <span class="sg-n">${n}</span>
+       <span class="sg-t"><b>${t("sb_send")}</b><small>${t(n === 1 ? "sb_one" : "sb_many").replace("{n}", n)}</small></span>
+       <span class="sg-arrow" aria-hidden="true">→</span></button>
+     <button type="button" class="sg-see" data-go="cart">${t("sb_see")}</button></div>`);
   $("#dock").hidden = false;
 }
-function refreshDock(){
-  const b = $("#dock-in .cart-go"); if (b) b.remove();
+function refreshDock(pop){
+  const b = $("#dock-in .sendbar"); if (b) b.remove();
   const q = $("#b-qr2"); if (q && !state.cart.length) q.classList.add("primary");
-  cartDock();
+  const q1 = $("#b-qr1"); if (q1 && !state.cart.length) q1.classList.add("primary");
+  cartDock(pop);
   if (!$("#dock-in").children.length) $("#dock").hidden = true;
 }
 
@@ -2197,7 +2227,7 @@ function viewLinhas(){
     <p class="eyebrow">${t("home_eyebrow")}</p>
     <h1 class="page-title" style="font-size:36px;margin-top:4px">${t("our_lines")}</h1>
     <p class="lead-in">${t("home_lead")}</p>
-    <div class="line-grid">${LINES.map(l => {
+    <div class="line-grid">${LINES.filter(l => PRODUCTS.some(p => p.line === l.id)).map(l => {
       const n = PRODUCTS.filter(p => p.line === l.id).length;
       return `<button type="button" class="line-chip" data-go="lin-${l.id}">
         <span class="lc-ico i-${l.id}">${ICO_LINE[l.id] || ""}</span>
@@ -2227,7 +2257,7 @@ function viewDivision(div){
     <p class="eyebrow">${t("our_lines")}</p>
     <h1 class="page-title" style="font-size:36px;margin-top:4px">${esc(nm(d))}</h1>
     <p class="lead-in">${esc(dsc(d))}</p>
-    <div class="line-grid">${linesOf(div).map(l => {
+    <div class="line-grid">${linesOf(div).filter(l => PRODUCTS.some(p => p.div === div && p.line === l.id)).map(l => {
       const n = PRODUCTS.filter(p => p.div === div && p.line === l.id).length;
       return `<button type="button" class="line-chip" data-go="cat-${div}-${l.id}">
         <span class="lc-ico i-${l.id}">${ICO_LINE[l.id] || ""}</span>
@@ -2269,6 +2299,7 @@ function viewLine(div, line){
       <th class="sel"></th><th>${t("th_code")}</th><th>${t("th_name")}</th>${div==="all"?`<th>${t("th_div")}</th>`:""}<th>${t("th_met")}</th><th>${t("th_apr")}</th><th>${t("th_an")}</th>
     </tr></thead><tbody id="rows"></tbody></table></div>
     <div class="empty" id="noprod" hidden>${t("no_prod")}</div>
+    <p class="note reg-note">${t("reg_note")}</p>
     ${EXAMPLE ? `<p class="note"><span class="tag">${t("example")}</span> ${t("ex_note")}</p>` : ""}`;
   const draw = () => {
     const q = fold($("#q").value);
@@ -2434,7 +2465,8 @@ function propText(d, limit, wrap){
       quem,
       linesTxt.length ? t("int_lines") + ":\n" + linesTxt.join("\n") : "",
       all.length ? t("prods") + " (" + all.length + "):\n" + list.join("\n") + (cut ? "\n" + t("cart_more").replace("{n}", cut) : "") : "",
-      t("cat_link") + ": " + CATALOG_URL
+      t("cat_link") + ": " + CATALOG_URL,
+      "Ref: " + [state.cfg.evento, state.qr.vend, state.qr.div, state.qr.linha, state.lang].filter(Boolean).join(" / ")
     ].filter(Boolean).join("\n\n");
     const out = wrap(txt);
     if (out.length <= limit || list.length <= 1) return out;
@@ -2442,6 +2474,24 @@ function propText(d, limit, wrap){
 }
 const CATALOG_URL = "https://neimarbiomedicomg-code.github.io/BIOCLIN-COLABIOCLI-2026/?modo=cliente";
 const SUBJ_TAG = "[Catálogo Bioclin] ";   // a regra de resposta automática do Outlook procura este texto no assunto
+const SITE_BASE = "https://neimarbiomedicomg-code.github.io/BIOCLIN-COLABIOCLI-2026/";
+function interestLines(){                        // linhas de interesse (completas + dos produtos marcados)
+  const set = new Map();
+  cartLines().forEach(x => (x.div === "all" ? divsOfLine(x.line).map(d => d.id) : [x.div]).forEach(dv => set.set(dv + "-" + x.line, {div:dv, line:x.line, full:true})));
+  cartProds().forEach(p => { const k = p.div + "-" + p.line; if (!set.has(k)) set.set(k, {div:p.div, line:p.line, full:false}); });
+  return [...set.values()].filter(x => PRODUCTS.some(p => p.div === x.div && p.line === x.line));
+}
+const pdfURL = (div, line) => SITE_BASE + "pdf/bioclin-" + div + "-" + line + "-" + (state.lang === "pt" ? "pt" : "es") + ".pdf";
+function leadPayload(d, lead){
+  return {
+    ts: new Date().toISOString(), modo: CLIENTE ? "cliente" : "tablet", lang: state.lang,
+    feira: state.cfg.evento, vend: state.qr.vend || "", origem: [state.qr.div, state.qr.linha].filter(Boolean).join("/") || "capa",
+    empresa: d.empresa, email: d.email, perfil: d.perfil, perfil_txt: t("p_" + d.perfil), pais: d.pais, score: lead.score,
+    linhas: interestLines().map(x => ({div: x.div, line: x.line, nome: nm(lineOf(x.line)) + " · " + nm(divOf(x.div)), completa: x.full, pdf: pdfURL(x.div, x.line)})),
+    produtos: cartProds().map(p => ({code: p.code, nome: nm(p), linha: nm(lineOf(p.line))})),
+    catalogo: CATALOG_URL
+  };
+}
 const mailURL = d => propText(d, 1800, x =>
   "mailto:" + state.cfg.email + "?subject=" + encodeURIComponent(SUBJ_TAG + t("mail_subject") + " - " + (d.empresa || state.cfg.evento)) + "&body=" + encodeURIComponent(x));
 /* QR: o visitante escaneia e o e-mail sai do celular dele */
@@ -2470,6 +2520,27 @@ function saveQuick(d, via){
   state.leads.unshift(lead); store(KEY_LEADS, state.leads);
   $("#leads-count").textContent = state.leads.length;
   return lead;
+}
+function sentDirect(lead, email){
+  if (!QSCOPE) clearCart();
+  $("#dock").hidden = true; $("#dock-in").innerHTML = "";
+  state.route = "";
+  document.body.classList.remove("wz-on"); $("#back-btn").hidden = true; tabs();
+  try { history.replaceState({n: 0}, "", urlFor("")); } catch(_) {}
+  $("#app").innerHTML = `<div class="done ok-direct">
+    <div class="ok-ico">${ICO_OK}</div>
+    <h2>${t("v2_ok_title")}</h2>
+    <p style="margin:0">${t("v2_ok_text").replace("{email}", "<b>" + esc(email) + "</b>").replace("{prazo}", esc(prazoTxt()))}</p>
+    <p class="note" style="margin:0">${t("v2_ok_spam")}</p>
+    ${CLIENTE ? "" : `<p style="margin:0">${t("ok_text")} <span class="score s-${lead.score}">${t(SC[lead.score])}</span></p>`}
+    <div class="keep"><b>${t("keep_title")}</b><span>${t("keep_text")}</span>
+      <div class="keep-row"><code>${esc(CATALOG_URL)}</code><button type="button" class="btn ghost" id="b-share">${t("keep_btn")}</button></div></div>
+    <div class="toolbar"><button type="button" class="btn primary" data-go="">${t("home_btn")}</button></div></div>`;
+  $("#b-share").onclick = async () => {
+    try { if (navigator.share) { await navigator.share({title: "Catálogo Bioclin", url: CATALOG_URL}); return; } } catch(_) { return; }
+    try { await navigator.clipboard.writeText(CATALOG_URL); $("#b-share").textContent = t("keep_ok"); } catch(_) {}
+  };
+  window.scrollTo(0,0);
 }
 function sentView(lead, url, via){
   if (!QSCOPE) clearCart();
@@ -2570,7 +2641,10 @@ function viewWizard(n){
     body = `<p class="wz-q">${t("wz_q5")}</p>
     <div class="wz-sum">${row(t("wz_l1"), state.wz.empresa, 1)}${row(t("email"), state.wz.email, 2)}${row(t("wz_l3"), t("p_"+state.wz.perfil), 3)}${row(t("country"), state.wz.pais, 4)}
       <div class="wz-row"><span>${t("wz_l5")}</span><b>${[...ls.map(x => nm(lineOf(x.line)) + " (" + t("w_all") + ")"), ...ps.map(p => nm(p))].map(esc).join(", ")}</b><button type="button" data-go="cart">${t("wz_edit")}</button></div></div>
-    <a class="btn primary wz-send" id="b-ml" href="${esc(mailURL(wzData()))}" target="_blank" rel="noopener">${t("mail_send")}</a>
+    ${state.cfg.endpoint ? `<button type="button" class="btn primary wz-send" id="b-direct">${t("v2_send")}</button>
+    <p class="err" id="v2-err" hidden>${t("v2_fail")}</p>
+    <a class="wz-alt" id="b-ml" href="${esc(mailURL(wzData()))}" target="_blank" rel="noopener">${t("v2_alt")}</a>`
+    : `<a class="btn primary wz-send" id="b-ml" href="${esc(mailURL(wzData()))}" target="_blank" rel="noopener">${t("mail_send")}</a>`}
     ${CLIENTE ? "" : `<button type="button" class="btn ghost" id="b-qrc">${t("qr_client")}</button>`}
     <p class="note" style="margin:0">${t("wz_consent")}</p>`;
   }
@@ -2596,6 +2670,23 @@ function viewWizard(n){
     $("#wz-ob").hidden = false; inp.focus(); inp.scrollIntoView({block:"center"});
   };
   if (n === WZ_N) {
+    const bd = $("#b-direct");
+    if (bd) bd.onclick = async () => {
+      bd.disabled = true; bd.textContent = t("v2_sending"); $("#v2-err").hidden = true;
+      const d = wzData();
+      const lead = saveQuick(d, "direto");
+      const payload = leadPayload(d, lead);
+      try {
+        if (!navigator.onLine) throw new Error("offline");
+        await fetch(state.cfg.endpoint, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(payload)});
+        state.wz = { empresa:"", email:"", perfil:"", pais:"" };
+        sentDirect(lead, d.email);
+      } catch(_) {
+        lead.origem = "interesse-falhou"; store(KEY_LEADS, state.leads);
+        bd.disabled = false; bd.textContent = t("v2_send"); $("#v2-err").hidden = false;
+        $("#b-ml").classList.add("btn","primary"); $("#b-ml").classList.remove("wz-alt");
+      }
+    };
     const a = $("#b-ml");
     a.addEventListener("click", () => {
       const lead = saveQuick(wzData(), "mail");
@@ -2875,6 +2966,7 @@ function viewCfg(){
         <label class="f">${t("c_prazo")}<input name="prazo" value="${esc(c.prazo)}"></label>
         <label class="f full">${t("c_cat")}<input name="linkCatalogo" value="${esc(c.linkCatalogo)}" placeholder="https://"></label>
         <label class="f full">${t("c_form")}<input name="linkFormulario" value="${esc(c.linkFormulario)}" placeholder="https://"></label>
+        <label class="f full">${t("c_endpoint")}<input name="endpoint" value="${esc(c.endpoint||"")}" placeholder="https://script.google.com/macros/s/.../exec"></label>
       </fieldset>
       <details class="fold"><summary>${t("c_lines")}</summary><fieldset>${lineInputs}</fieldset></details>
       <div class="toolbar" style="margin-top:0"><button class="btn primary" type="submit">${t("save")}</button><p class="ok" id="cfg-ok" hidden>${t("saved")}</p></div>
@@ -2887,7 +2979,7 @@ function viewCfg(){
     const fd = new FormData($("#cf")), v = n => String(fd.get(n) || "").trim(), links = {};
     DIVS.forEach(d => LINES.forEach(l => { const k = d.id+"-"+l.id, x = v("link_"+k); if (x) links[k] = x; }));
     state.cfg = { evento:v("evento")||DEFAULTS.evento, email:v("email")||DEFAULTS.email, pin:v("pin").replace(/\D/g,""), responsavel:v("responsavel"), prazo:v("prazo"),
-      linkCatalogo:v("linkCatalogo"), linkFormulario:v("linkFormulario"), links };
+      linkCatalogo:v("linkCatalogo"), linkFormulario:v("linkFormulario"), links, endpoint:v("endpoint") };
     store(KEY_CFG, state.cfg);
     $("#cfg-ok").hidden = false;
     if ($("#cfg-ok2")) $("#cfg-ok2").hidden = false;
@@ -3021,6 +3113,16 @@ Object.assign(T.es, {cat_link:"Catálogo digital Bioclin (consúltelo cuando qui
   wz_q5:"¿Todo listo? Revise y envíe", wz_edit:"Editar", wz_l1:"Institución", wz_l3:"Tipo", wz_l5:"Interés",
   wz_consent:"Al enviar, acepta que Bioclin lo contacte sobre estos productos.", p_other:"Otro"});
 
+Object.assign(T.pt, {"c_endpoint": "Envio direto (V2): URL do Google Apps Script", "v2_send": "Receber informações por e-mail", "v2_sending": "Enviando…", "v2_fail": "Não foi possível enviar agora (sem internet?). Tente de novo ou use o seu e-mail abaixo.", "v2_alt": "ou enviar pelo meu aplicativo de e-mail", "v2_ok_title": "Pronto! Recebemos sua lista", "v2_ok_text": "Enviamos agora para {email} os catálogos das linhas que você marcou. A equipe Bioclin responde em {prazo}.", "v2_ok_spam": "Não chegou em alguns minutos? Confira a caixa de spam ou promoções.", "reg_note": "Disponibilidade sujeita ao registro sanitário em cada país.", "sent_title": "Falta um passo: toque em ENVIAR"});
+Object.assign(T.en, {"c_endpoint": "Direct send (V2): Google Apps Script URL", "v2_send": "Get the information by email", "v2_sending": "Sending…", "v2_fail": "Could not send right now (no internet?). Try again or use your email app below.", "v2_alt": "or send from my email app", "v2_ok_title": "Done! We received your list", "v2_ok_text": "We just sent the catalogues of the lines you selected to {email}. The Bioclin team replies within {prazo}.", "v2_ok_spam": "Not there in a few minutes? Check your spam or promotions folder.", "reg_note": "Availability subject to sanitary registration in each country.", "sent_title": "One more step: tap SEND"});
+Object.assign(T.es, {"c_endpoint": "Envío directo (V2): URL de Google Apps Script", "v2_send": "Recibir información por correo", "v2_sending": "Enviando…", "v2_fail": "No fue posible enviar ahora (¿sin internet?). Intente de nuevo o use su correo abajo.", "v2_alt": "o enviar desde mi aplicación de correo", "v2_ok_title": "¡Listo! Recibimos su lista", "v2_ok_text": "Acabamos de enviar a {email} los catálogos de las líneas que marcó. El equipo Bioclin responde en {prazo}.", "v2_ok_spam": "¿No llegó en unos minutos? Revise la carpeta de spam o promociones.", "reg_note": "Disponibilidad sujeta al registro sanitario en cada país.", "sent_title": "Falta un paso: toque ENVIAR"});
+
+Object.assign(T.pt, {"sent_title": "Obrigado! Confira o envio", "sent_text": "Se você já tocou em ENVIAR no seu e-mail, sua lista está com a Bioclin. Se o e-mail não abriu, use o botão abaixo."});
+Object.assign(T.en, {"sent_title": "Thank you! Check it was sent", "sent_text": "If you already tapped SEND in your email app, your list is with Bioclin. If the email did not open, use the button below."});
+Object.assign(T.es, {"sent_title": "¡Gracias! Confirme el envío", "sent_text": "Si ya tocó ENVIAR en su correo, su lista está con Bioclin. Si el correo no se abrió, use el botón de abajo."});
+Object.assign(T.pt, {"sb_send": "Enviar meu interesse", "sb_one": "1 item selecionado · toque para enviar", "sb_many": "{n} itens selecionados · toque para enviar", "sb_see": "Ver lista"});
+Object.assign(T.en, {"sb_send": "Send my interest", "sb_one": "1 item selected · tap to send", "sb_many": "{n} items selected · tap to send", "sb_see": "View list"});
+Object.assign(T.es, {"sb_send": "Enviar mi interés", "sb_one": "1 ítem seleccionado · toque para enviar", "sb_many": "{n} ítems seleccionados · toque para enviar", "sb_see": "Ver lista"});
 /* ---------- Rastreio vindo do QR ---------- */
 state.qr = { feira:QS.get("feira")||"", vend:QS.get("vend")||"", div:QS.get("div")||"", linha:QS.get("linha")||"" };
 if (["es","en","pt"].includes(QS.get("lang"))) state.lang = QS.get("lang");
