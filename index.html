@@ -595,6 +595,10 @@ body[data-wm]::before{content:"";position:fixed;inset:0;z-index:-1;pointer-event
 .off-box .qrbox canvas{width:min(360px,70vw);height:min(360px,70vw)}
 .off-tag{display:inline-block;background:#fff4e0;color:#8a5a00;border:1px solid #f0d9a2;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700}
 .q-chip{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;background:#fff4e0;color:#8a5a00;border:1px solid #f0d9a2;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.wz-obs{display:flex;flex-direction:column;gap:6px;font-weight:700;color:var(--ink);margin:4px 0}
+.wz-obs small{font-weight:500;color:var(--muted)}
+.wz-obs textarea{border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:16px/1.4 var(--f-body);resize:vertical;min-height:84px;background:#fff}
+.wz-obs textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
 /* ================= V2: envio direto ================= */
 .wz-alt{display:block;text-align:center;font-size:14px;color:var(--muted);text-decoration:underline;padding:6px}
 .ok-direct{text-align:left}
@@ -2648,7 +2652,8 @@ function propText(d, limit, wrap){
       d.pais ? t("country") + ": " + d.pais : "",
       d.email ? t("email") + ": " + d.email : "",
       d.perfil ? t("m_profile") + ": " + t("p_" + d.perfil) : "",
-      d.prazo ? t("m_when") + ": " + t(d.prazo) : ""
+      d.prazo ? t("m_when") + ": " + t(d.prazo) : "",
+      d.obs ? t("obs_l") + ": " + d.obs : ""
     ].filter(Boolean).join("\n");
     const txt = [
       t("wa_head") + " — " + state.cfg.evento,
@@ -2679,7 +2684,8 @@ function leadPayload(d, lead){
     empresa: d.empresa, email: d.email, perfil: d.perfil, perfil_txt: t("p_" + d.perfil), pais: d.pais, score: lead.score,
     linhas: interestLines().map(x => ({div: x.div, line: x.line, nome: nm(lineOf(x.line)) + " · " + nm(divOf(x.div)), completa: x.full, pdf: pdfURL(x.div, x.line)})),
     produtos: cartProds().map(p => ({code: p.code, nome: nm(p), linha: nm(lineOf(p.line))})),
-    catalogo: CATALOG_URL
+    catalogo: CATALOG_URL,
+    obs: d.obs || ""
   };
 }
 const mailURL = d => propText(d, 1800, x =>
@@ -2705,7 +2711,7 @@ function saveQuick(d, via){
     linhasCompletas: cartLines().map(x => x.div + "-" + x.line),
     produtos: items.map(p=>p.code || nm(p)), tipo:["quote"],
     atuaIVD:"", marcas:"", equipamentos:"", volume:"", registro:"", cobertura:"",
-    prazo:d.prazo, obs:"", nota:"" };
+    prazo:d.prazo, obs:d.obs||"", nota:"" };
   lead.score = scoreOf(lead);
   state.leads.unshift(lead); store(KEY_LEADS, state.leads);
   $("#leads-count").textContent = state.leads.length;
@@ -2798,8 +2804,8 @@ function viewCart(div, line){
 const COUNTRIES = ["Bolivia","Perú","Paraguay","Argentina","Chile","Brasil","Colombia","Ecuador","Venezuela","Uruguay","México"];
 const WZ_TYPES = ["lab","dist","hosp","other"];
 const WZ_N = 5;
-state.wz = { empresa:"", email:"", perfil:"", pais:"" };
-const wzData = () => ({ nome:"", empresa:state.wz.empresa.trim(), email:state.wz.email.trim(), pais:state.wz.pais.trim(), perfil:state.wz.perfil, prazo:"", consent:true });
+state.wz = { empresa:"", email:"", perfil:"", pais:"", obs:"" };
+const wzData = () => ({ nome:"", empresa:state.wz.empresa.trim(), email:state.wz.email.trim(), pais:state.wz.pais.trim(), perfil:state.wz.perfil, obs:(state.wz.obs||"").trim().slice(0,500), prazo:"", consent:true });
 const emailOK = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v).trim());
 const wzStepOK = n => n === 1 ? !!state.wz.empresa.trim() : n === 2 ? emailOK(state.wz.email) : n === 3 ? !!state.wz.perfil : n === 4 ? !!state.wz.pais.trim() : true;
 function viewWizard(n){
@@ -2831,6 +2837,8 @@ function viewWizard(n){
     body = `<p class="wz-q">${t("wz_q5")}</p>
     <div class="wz-sum">${row(t("wz_l1"), state.wz.empresa, 1)}${row(t("email"), state.wz.email, 2)}${row(t("wz_l3"), t("p_"+state.wz.perfil), 3)}${row(t("country"), state.wz.pais, 4)}
       <div class="wz-row"><span>${t("wz_l5")}</span><b>${[...ls.map(x => nm(lineOf(x.line)) + " (" + t("w_all") + ")"), ...ps.map(p => nm(p))].map(esc).join(", ")}</b><button type="button" data-go="cart">${t("wz_edit")}</button></div></div>
+    <label class="wz-obs"><span>${t("obs_l")} <small>(${t("obs_opt")})</small></span>
+      <textarea id="wz-obs" rows="3" maxlength="500" placeholder="${t("obs_ph")}">${esc(state.wz.obs||"")}</textarea></label>
     ${state.cfg.endpoint ? `<button type="button" class="btn primary wz-send" id="b-direct">${t("v2_send")}</button>
     <p class="err" id="v2-err" hidden>${t("v2_fail")}</p>
     <a class="wz-alt" id="b-ml" href="${esc(mailURL(wzData()))}" target="_blank" rel="noopener">${t("v2_alt")}</a>`
@@ -2860,6 +2868,8 @@ function viewWizard(n){
     $("#wz-ob").hidden = false; inp.focus(); inp.scrollIntoView({block:"center"});
   };
   if (n === WZ_N) {
+    const ob = $("#wz-obs");
+    if (ob) ob.addEventListener("input", () => { state.wz.obs = ob.value; const a2 = $("#b-ml"); if (a2) a2.href = mailURL(wzData()); });
     const bd = $("#b-direct");
     if (bd) bd.onclick = async () => {
       bd.disabled = true; bd.textContent = t("v2_sending"); $("#v2-err").hidden = true;
@@ -2867,20 +2877,21 @@ function viewWizard(n){
       const lead = saveQuick(d, "direto");
       const payload = leadPayload(d, lead);
       payload.id = lead.id;
+      if (payload.obs) payload.modo += " | Obs: " + payload.obs;
       try {
         await postLead(payload);
-        state.wz = { empresa:"", email:"", perfil:"", pais:"" };
+        state.wz = { empresa:"", email:"", perfil:"", pais:"", obs:"" };
         sentDirect(lead, d.email);
       } catch(_) {
         lead.origem = "interesse-offline"; store(KEY_LEADS, state.leads);
-        state.wz = { empresa:"", email:"", perfil:"", pais:"" };
+        state.wz = { empresa:"", email:"", perfil:"", pais:"", obs:"" };
         offlineView(lead, d, payload);
       }
     };
     const a = $("#b-ml");
     a.addEventListener("click", () => {
       const lead = saveQuick(wzData(), "mail");
-      state.wz = { empresa:"", email:"", perfil:"", pais:"" };        // tablet: o próximo visitante começa do zero
+      state.wz = { empresa:"", email:"", perfil:"", pais:"", obs:"" };        // tablet: o próximo visitante começa do zero
       setTimeout(() => sentView(lead, a.href, "mail"), 60);
     });
     if ($("#b-qrc")) $("#b-qrc").onclick = () => {
@@ -3353,7 +3364,7 @@ const b64u = s => btoa(unescape(encodeURIComponent(s))).replace(/\+/g,"-").repla
 const ub64u = s => decodeURIComponent(escape(atob(s.replace(/-/g,"+").replace(/_/g,"/"))));
 function leadQR(lead, d){
   const c = {i:lead.id, e:d.empresa, m:d.email, p:d.perfil, c:d.pais, g:state.lang, f:state.cfg.evento, v:state.qr.vend||"", s:lead.score,
-    L:cartLines().map(x => x.div + "-" + x.line), P:state.cart.filter(c => !isLineKey(c))};
+    L:cartLines().map(x => x.div + "-" + x.line), P:state.cart.filter(c => !isLineKey(c)), o:(d.obs||"").slice(0,300)};
   return SITE_BASE + "?modo=cliente&l=" + b64u(JSON.stringify(c));
 }
 function queueGet(){ return load(KEY_Q, []); }
@@ -3406,9 +3417,9 @@ async function qrLeadArrived(raw){
   const sent = load("bioclin_qr_enviados", []);
   const saveCart = state.cart;
   state.cart = [...(c.L||[]).map(k => { const i = k.indexOf("-"); return lineKey(k.slice(0,i), k.slice(i+1)); }), ...(c.P||[])];
-  const d = {empresa:c.e, email:c.m, perfil:c.p, pais:c.c};
+  const d = {empresa:c.e, email:c.m, perfil:c.p, pais:c.c, obs:c.o||""};
   const payload = leadPayload(d, {score:c.s});
-  Object.assign(payload, {id:c.i, feira:c.f || payload.feira, vend:c.v || "", modo:"qr-sem-internet"});
+  Object.assign(payload, {id:c.i, feira:c.f || payload.feira, vend:c.v || "", modo:"qr-sem-internet" + (c.o ? " | Obs: " + c.o : "")});
   state.cart = saveCart;
   const show = () => sentDirect({score:c.s}, c.m);
   if (sent.includes(c.i)) { show(); return true; }
@@ -3440,6 +3451,9 @@ if ("serviceWorker" in navigator && location.protocol === "https:") {
 Object.assign(T.pt, {q_pend:"lead(s) aguardando internet para envio", off_tag:"Sem internet neste equipamento", off_title:"Escaneie com o seu celular para receber o catálogo", off_text:"Seus dados já ficaram registrados. Ao escanear, o envio sai pelo seu celular e o catálogo chega no seu e-mail.", off_note:"Se não for possível escanear, toque em \"Enviar depois\": o envio sai sozinho quando a internet voltar.", off_ok:"Pronto, próximo visitante", off_later:"Enviar depois (quando voltar a internet)", off_ph_fail:"Não foi possível enviar. Verifique a internet do celular.", off_retry:"Tentar de novo"});
 Object.assign(T.es, {q_pend:"lead(s) esperando internet para enviar", off_tag:"Sin internet en este equipo", off_title:"Escanee con su celular para recibir el catálogo", off_text:"Sus datos ya quedaron registrados. Al escanear, el envío sale desde su celular y el catálogo llega a su correo.", off_note:"Si no puede escanear, toque \"Enviar después\": se enviará solo cuando vuelva internet.", off_ok:"Listo, siguiente visitante", off_later:"Enviar después (cuando vuelva internet)", off_ph_fail:"No fue posible enviar. Revise la internet de su celular.", off_retry:"Intentar de nuevo"});
 Object.assign(T.en, {q_pend:"lead(s) waiting for internet to send", off_tag:"No internet on this device", off_title:"Scan with your phone to get the catalogue", off_text:"Your details are already saved. When you scan, it is sent from your phone and the catalogue arrives in your email.", off_note:"If you cannot scan, tap \"Send later\": it will be sent automatically when the internet is back.", off_ok:"Done, next visitor", off_later:"Send later (when internet is back)", off_ph_fail:"Could not send. Check your phone's internet.", off_retry:"Try again"});
+Object.assign(T.pt,{obs_l:"Observações", obs_opt:"opcional", obs_ph:"Ex.: volume mensal, equipamento que usa, produto que procura, melhor horário para contato…"});
+Object.assign(T.es,{obs_l:"Observaciones", obs_opt:"opcional", obs_ph:"Ej.: volumen mensual, equipo que usa, producto que busca, mejor horario de contacto…"});
+Object.assign(T.en,{obs_l:"Notes", obs_opt:"optional", obs_ph:"E.g. monthly volume, analyzer you use, product you are looking for, best time to contact…"});
 /* ---------- Rastreio vindo do QR ---------- */
 state.qr = { feira:QS.get("feira")||"", vend:QS.get("vend")||"", div:QS.get("div")||"", linha:QS.get("linha")||"" };
 if (["es","en","pt"].includes(QS.get("lang"))) state.lang = QS.get("lang");
