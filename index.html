@@ -515,6 +515,22 @@ body[data-line] .top{border-bottom-color:var(--accent)!important}
 .keep-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px}
 .keep-row code{flex:1 1 220px;font-size:12px;word-break:break-all;color:var(--accent)}
 
+
+/* Tablet grande / tela de computador: ícones das linhas proporcionais à tela */
+@media (min-width:701px){
+  .line-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(150px,17vw,230px),1fr));gap:clamp(12px,1.6vw,22px);margin-top:16px}
+  .line-chip{min-height:clamp(120px,15vw,215px);font-size:clamp(14px,1.55vw,20px);gap:clamp(9px,1.1vw,16px);border-radius:clamp(14px,1.6vw,22px);padding:clamp(14px,1.8vw,26px) 10px}
+  .lc-ico{width:clamp(52px,6.6vw,96px);height:clamp(52px,6.6vw,96px)}
+  .lc-ico svg{width:clamp(26px,3.3vw,48px);height:clamp(26px,3.3vw,48px)}
+  .line-chip small{font-size:clamp(11px,1.15vw,15px)}
+}
+@media (min-width:701px) and (orientation:portrait){
+  .line-grid{grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px)}
+  .line-chip{min-height:clamp(150px,24vw,280px);font-size:clamp(16px,2.3vw,26px)}
+  .lc-ico{width:clamp(64px,10vw,124px);height:clamp(64px,10vw,124px)}
+  .lc-ico svg{width:clamp(32px,5vw,62px);height:clamp(32px,5vw,62px)}
+  .line-chip small{font-size:clamp(12px,1.6vw,18px)}
+}
 /* ================= V2: envio direto ================= */
 .wz-alt{display:block;text-align:center;font-size:14px;color:var(--muted);text-decoration:underline;padding:6px}
 .ok-direct{text-align:left}
