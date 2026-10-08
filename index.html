@@ -2252,7 +2252,7 @@ function render(){
   if (atual) document.body.dataset.div = atual; else delete document.body.dataset.div;
   const lin = (p[0] === "cat" || p[0] === "q" || p[0] === "lead") && lineOf(p[2]) ? p[2] : "";
   if (lin) document.body.dataset.line = lin; else delete document.body.dataset.line;
-  if (p[0] === "div" || state.route === "linhas") document.body.dataset.wm = "1"; else delete document.body.dataset.wm;
+  if (["div","cat","lin"].includes(p[0]) || state.route === "linhas") document.body.dataset.wm = "1"; else delete document.body.dataset.wm;
   if (state.route === "leads") viewLeads();
   else if (state.route === "cfg") viewCfg();
   else if (state.route === "cart") viewCart();
